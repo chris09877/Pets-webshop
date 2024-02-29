@@ -1,9 +1,6 @@
 package chris.ilg.dierenwinkel.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.util.Date;
 
@@ -14,7 +11,30 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String firstname,lastname, address,number;
-    private int postcode;
+    @Column(nullable = false, length = 255)
+    private String firstname,lastname, address;
+    @Column(nullable = false, length = 255)
+    private String postcode, number;
+    @Column(nullable = false)
     private Date birthdate;
+    @Column(nullable = false, length = 40, unique = true)
+    private String phone, mail;
+
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String number) {
+        this.phone = phone;
+    }
+
+
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
 }

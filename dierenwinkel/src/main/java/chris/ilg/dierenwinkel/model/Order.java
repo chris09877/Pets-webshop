@@ -11,10 +11,15 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(nullable = true)
     @ElementCollection
     private List<String> content;
+    @Column(nullable = false, length = 100)
     private Date date;
-    private String firstname, lastname,number, address,postcode,mail;
+
+    @Column(nullable = true)
+    private String userInfo;
+
 
     public int getId() {
         return id;
@@ -40,51 +45,17 @@ public class Order {
         this.date = date;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public String getUserInfo() {
+        return userInfo;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setUserInfo(String userInfo) {
+        this.userInfo = userInfo;
     }
 
-    public String getLastname() {
-        return lastname;
-    }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
 
-    public String getNumber() {
-        return number;
-    }
 
-    public void setNumber(String number) {
-        this.number = number;
-    }
 
-    public String getAddress() {
-        return address;
-    }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getPostcode() {
-        return postcode;
-    }
-
-    public void setPostcode(String postcode) {
-        this.postcode = postcode;
-    }
-
-    public String getMail() {
-        return mail;
-    }
-
-    public void setMail(String mail) {
-        this.mail = mail;
-    }
 }
