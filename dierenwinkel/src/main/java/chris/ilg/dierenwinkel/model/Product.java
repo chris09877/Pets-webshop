@@ -14,6 +14,9 @@ public class Product {
     private double price;
     @Column(nullable = false)
     private int quantity;
+    public enum Category{fish,dog,cat};
+    @Column(nullable = false)
+    private Category categories;
 
 
     public String getName() {
