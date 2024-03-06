@@ -28,7 +28,7 @@
         </createTable>
 
         <!-- Order Table -->
-        <createTable tableName="order">
+        <createTable tableName="orders">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>

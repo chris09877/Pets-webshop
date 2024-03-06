@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/orders")
 public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @PostMapping("/order/add")
+    @PostMapping("/add")
     public String add(@RequestBody Order order){
         orderService.saveOrder(order);
         return "New student is added";
