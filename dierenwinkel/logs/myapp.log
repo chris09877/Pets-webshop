@@ -22573,3 +22573,37 @@ Unconditional classes:
 17:22:15.973 [HikariPool-3 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Fill pool skipped, pool has sufficient level or currently being filled (queueDepth=0).
 17:22:45.988 [HikariPool-3 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Pool stats (total=10, active=0, idle=10, waiting=0)
 17:22:45.988 [HikariPool-3 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Fill pool skipped, pool has sufficient level or currently being filled (queueDepth=0).
+17:23:15.991 [HikariPool-3 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Pool stats (total=10, active=0, idle=10, waiting=0)
+17:23:15.991 [HikariPool-3 housekeeper] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Fill pool skipped, pool has sufficient level or currently being filled (queueDepth=0).
+17:23:33.162 [SpringApplicationShutdownHook] DEBUG o.s.b.a.ApplicationAvailabilityBean - Application availability state ReadinessState changed from ACCEPTING_TRAFFIC to REFUSING_TRAFFIC
+17:23:33.163 [SpringApplicationShutdownHook] DEBUG o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Closing org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@79dbb39d, started on Wed Mar 06 17:20:15 CET 2024
+17:23:33.164 [SpringApplicationShutdownHook] DEBUG o.s.c.s.DefaultLifecycleProcessor - Stopping beans in phase 2147483647
+17:23:33.164 [SpringApplicationShutdownHook] DEBUG o.s.c.s.DefaultLifecycleProcessor - Bean 'applicationTaskExecutor' completed its stop procedure
+17:23:33.164 [SpringApplicationShutdownHook] DEBUG o.s.c.s.DefaultLifecycleProcessor - Stopping beans in phase 2147482623
+17:23:33.164 [SpringApplicationShutdownHook] DEBUG o.s.c.s.DefaultLifecycleProcessor - Bean 'webServerGracefulShutdown' completed its stop procedure
+17:23:33.164 [SpringApplicationShutdownHook] DEBUG o.s.c.s.DefaultLifecycleProcessor - Stopping beans in phase 2147481599
+17:23:33.177 [SpringApplicationShutdownHook] DEBUG o.s.c.s.DefaultLifecycleProcessor - Bean 'webServerStartStop' completed its stop procedure
+17:23:33.177 [SpringApplicationShutdownHook] DEBUG o.s.c.s.DefaultLifecycleProcessor - Stopping beans in phase -2147483647
+17:23:33.177 [SpringApplicationShutdownHook] DEBUG o.s.c.s.DefaultLifecycleProcessor - Bean 'springBootLoggingLifecycle' completed its stop procedure
+17:23:33.178 [SpringApplicationShutdownHook] DEBUG o.s.j.e.a.AnnotationMBeanExporter - Unregistering JMX-exposed beans on shutdown
+17:23:33.178 [SpringApplicationShutdownHook] DEBUG o.s.j.e.a.AnnotationMBeanExporter - Unregistering JMX-exposed beans
+17:23:33.178 [SpringApplicationShutdownHook] DEBUG o.s.s.c.ThreadPoolTaskExecutor - Shutting down ExecutorService 'applicationTaskExecutor'
+17:23:33.179 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+17:23:33.179 [SpringApplicationShutdownHook] DEBUG o.h.internal.SessionFactoryImpl - HHH000031: Closing
+17:23:33.179 [SpringApplicationShutdownHook] DEBUG o.h.type.spi.TypeConfiguration$Scope - Un-scoping TypeConfiguration [org.hibernate.type.spi.TypeConfiguration$Scope@502153d1] from SessionFactory [org.hibernate.internal.SessionFactoryImpl@26780018]
+17:23:33.179 [SpringApplicationShutdownHook] DEBUG o.h.s.i.AbstractServiceRegistryImpl - Implicitly destroying ServiceRegistry on de-registration of all child ServiceRegistries
+17:23:33.179 [SpringApplicationShutdownHook] DEBUG o.h.b.r.i.BootstrapServiceRegistryImpl - Implicitly destroying Boot-strap registry on de-registration of all child ServiceRegistries
+17:23:33.179 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown initiated...
+17:23:33.180 [SpringApplicationShutdownHook] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Before shutdown stats (total=10, active=0, idle=10, waiting=0)
+17:23:33.180 [HikariPool-3 connection closer] DEBUG com.zaxxer.hikari.pool.PoolBase - HikariPool-3 - Closing connection com.mysql.cj.jdbc.ConnectionImpl@6ed139f5: (connection evicted)
+17:23:33.181 [HikariPool-3 connection closer] DEBUG com.zaxxer.hikari.pool.PoolBase - HikariPool-3 - Closing connection com.mysql.cj.jdbc.ConnectionImpl@4e7826cd: (connection evicted)
+17:23:33.181 [HikariPool-3 connection closer] DEBUG com.zaxxer.hikari.pool.PoolBase - HikariPool-3 - Closing connection com.mysql.cj.jdbc.ConnectionImpl@f452cf6: (connection evicted)
+17:23:33.181 [HikariPool-3 connection closer] DEBUG com.zaxxer.hikari.pool.PoolBase - HikariPool-3 - Closing connection com.mysql.cj.jdbc.ConnectionImpl@3e00019f: (connection evicted)
+17:23:33.181 [HikariPool-3 connection closer] DEBUG com.zaxxer.hikari.pool.PoolBase - HikariPool-3 - Closing connection com.mysql.cj.jdbc.ConnectionImpl@6f6ad3b9: (connection evicted)
+17:23:33.181 [HikariPool-3 connection closer] DEBUG com.zaxxer.hikari.pool.PoolBase - HikariPool-3 - Closing connection com.mysql.cj.jdbc.ConnectionImpl@6819fee4: (connection evicted)
+17:23:33.181 [HikariPool-3 connection closer] DEBUG com.zaxxer.hikari.pool.PoolBase - HikariPool-3 - Closing connection com.mysql.cj.jdbc.ConnectionImpl@6b244872: (connection evicted)
+17:23:33.182 [HikariPool-3 connection closer] DEBUG com.zaxxer.hikari.pool.PoolBase - HikariPool-3 - Closing connection com.mysql.cj.jdbc.ConnectionImpl@42c2e163: (connection evicted)
+17:23:33.182 [HikariPool-3 connection closer] DEBUG com.zaxxer.hikari.pool.PoolBase - HikariPool-3 - Closing connection com.mysql.cj.jdbc.ConnectionImpl@cf586e1: (connection evicted)
+17:23:33.182 [HikariPool-3 connection closer] DEBUG com.zaxxer.hikari.pool.PoolBase - HikariPool-3 - Closing connection com.mysql.cj.jdbc.ConnectionImpl@6236c875: (connection evicted)
+17:23:33.182 [SpringApplicationShutdownHook] DEBUG com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - After shutdown stats (total=0, active=0, idle=0, waiting=0)
+17:23:33.182 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown completed.
