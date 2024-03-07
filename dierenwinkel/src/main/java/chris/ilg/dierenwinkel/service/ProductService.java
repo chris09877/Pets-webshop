@@ -7,4 +7,5 @@ public interface ProductService {
 
     @Transactional
     public Product saveProduct(Product product);
+    public Product getProductById(int id);
 }
