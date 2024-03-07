@@ -17,4 +17,8 @@ public class UserServiceImpl implements UserService{
         return userRepo.save(user);
     }
 
+    @Override
+    public User getUserById(int id) {
+        return userRepo.getById(id);
+    }
 }
