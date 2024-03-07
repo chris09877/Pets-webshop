@@ -54,4 +54,12 @@ public class Product {
     public int getId() {
         return id;
     }
+
+    public Category getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Category categories) {
+        this.categories = categories;
+    }
 }
