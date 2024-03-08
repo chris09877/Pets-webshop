@@ -8,4 +8,7 @@ import org.springframework.stereotype.Repository;
 public interface OrderRepo extends JpaRepository<Orders, Integer> {
 
 
+        Orders findByUserInfo(String userInfo);
+
+
 }
