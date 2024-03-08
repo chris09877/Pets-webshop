@@ -13,7 +13,6 @@ public class ProductServiceImpl implements ProductService{
 
     @Autowired
     private ProductRepo productRepo;
-    private ArrayList<Product> listOfProduct = new ArrayList<>();
     @Override
     public Product saveProduct(Product product) {
 
@@ -27,9 +26,18 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public ArrayList<Product> getAllProduct() {
+        ArrayList<Product> listOfProduct = new ArrayList<>();
 
 
         listOfProduct.addAll(productRepo.findAll());
         return listOfProduct;
     }
+/*
+    @Override
+    public ArrayList<Product> getProductsByCategory() {
+        ArrayList<Product> listOfProduct = new ArrayList<>();
+        listOfProduct.addAll(productRepo.findAll());
+        return listOfProduct;
+
+    }*/
 }

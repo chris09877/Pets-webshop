@@ -51,6 +51,19 @@ public class ProductController {
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // Return 500 Internal Server Error if products not found
         }
-    }
 
+    }
+    /*
+        @GetMapping("/{category}")
+        public ResponseEntity<ArrayList<Product>> getByCategory (@PathVariable String categroy)
+        {
+            logger.info("FIND PRODUCT WITH CATEGORY:";
+
+            Product p  = productService.getProductsByCategory();
+            if (p != null) {
+                return ResponseEntity.ok().body(p); // Return 200 OK response with the user entity
+            } else {
+                return ResponseEntity.notFound().build(); // Return 404 Not Found response if user not found
+            }
+        }*/
 }
