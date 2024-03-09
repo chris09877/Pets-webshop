@@ -2,6 +2,7 @@ package chris.ilg.dierenwinkel.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 @Entity
@@ -20,6 +21,8 @@ public class User {
     @Column(nullable = false, length = 40, unique = true)
     private String phone, mail;
 
+    @OneToMany(mappedBy = "user")
+    private ArrayList<Orders> orders;
 
     public String getPhone() {
         return phone;
@@ -88,5 +91,13 @@ public class User {
 
     public int getId() {
         return id;
+    }
+
+    public ArrayList<Orders> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(ArrayList<Orders> orders) {
+        this.orders = orders;
     }
 }

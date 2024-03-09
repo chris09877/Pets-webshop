@@ -2,12 +2,17 @@ package chris.ilg.dierenwinkel.model;
 
 import jakarta.persistence.*;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 @Entity
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @ManyToMany(mappedBy = "products")
+    private ArrayList<Orders> orders;
     @Column(nullable = false, length = 255)
     private String name,description;
     @Column(nullable = false)
@@ -61,5 +66,13 @@ public class Product {
 
     public void setCategories(Category categories) {
         this.categories = categories;
+    }
+
+    public ArrayList<Orders> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(ArrayList<Orders> orders) {
+        this.orders = orders;
     }
 }

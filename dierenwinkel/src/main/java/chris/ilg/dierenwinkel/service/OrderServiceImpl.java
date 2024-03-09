@@ -3,9 +3,9 @@ package chris.ilg.dierenwinkel.service;
 import chris.ilg.dierenwinkel.model.Orders;
 import chris.ilg.dierenwinkel.repository.OrderRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
@@ -33,6 +33,7 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
+    @Transactional
     public Orders updateOrder(String userInfo, Orders updatedOrder) {
         Orders existingOrder = orderRepo.findByUserInfo(userInfo);
 
@@ -40,6 +41,9 @@ public class OrderServiceImpl implements OrderService{
             // Update the necessary fields
             existingOrder.setDate(updatedOrder.getDate());
             existingOrder.setContent(updatedOrder.getContent());
+            existingOrder.setUserInfo(updatedOrder.getUserInfo());
+            existingOrder.setUser(updatedOrder.getUser());//pas très sur que ca va marcher
+
 
             return orderRepo.save(existingOrder);
         }
