@@ -19,7 +19,23 @@ public class Product {
     private double price;
     @Column(nullable = false)
     private int quantity;
-    public enum Category{fish,dog,cat};
+
+    public enum Category {
+        FISH(1),
+        DOG(2),
+        CAT(3);
+
+        private final int value;
+
+        Category(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+    @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
     private Category categories;
 
