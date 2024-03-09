@@ -10,4 +10,5 @@ public interface OrderService {
     public ArrayList<Orders> getAllOrders();
     public Orders getOrderById(int id);
     public Orders updateOrder(String userInfo, Orders updatedOrder);
+    public Orders getOrderByUserInfo(String userInfo);
 }

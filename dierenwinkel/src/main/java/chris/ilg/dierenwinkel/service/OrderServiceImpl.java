@@ -51,4 +51,14 @@ public class OrderServiceImpl implements OrderService{
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found for userInfo: " + userInfo);
         }
     }
+
+    @Override
+    public Orders getOrderByUserInfo(String userInfo) {
+        Orders existingOrder = orderRepo.findByUserInfo(userInfo);
+        if (existingOrder != null) {
+            return existingOrder;
+        }
+        else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found for userInfo: " + userInfo);
+        }    }
 }

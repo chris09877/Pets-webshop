@@ -56,4 +56,16 @@ public class OrderController {
         logger.info("Updating the order with user info: " + userInfo);
         return orderService.updateOrder(userInfo, updatedOrder);
     }
+
+    @GetMapping("/find")
+    public ResponseEntity<Orders> getOrderByUserInfo(@RequestParam String userInfo) {
+        logger.info("Getting the order with user info: " + userInfo);
+        Orders order = orderService.getOrderByUserInfo(userInfo);
+        if (order != null ){
+            return ResponseEntity.ok(order);
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
 }
