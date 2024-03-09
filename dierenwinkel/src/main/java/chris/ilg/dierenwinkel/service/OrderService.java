@@ -11,4 +11,6 @@ public interface OrderService {
     public Orders getOrderById(int id);
     public Orders updateOrder(String userInfo, Orders updatedOrder);
     public Orders getOrderByUserInfo(String userInfo);
+    public void deleteOrder(int id);
+
 }

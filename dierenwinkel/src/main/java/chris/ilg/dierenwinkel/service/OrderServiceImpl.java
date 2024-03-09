@@ -60,5 +60,18 @@ public class OrderServiceImpl implements OrderService{
         }
         else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found for userInfo: " + userInfo);
-        }    }
+        }
+    }
+
+    @Override
+    public void deleteOrder(int id) {
+
+        if (orderRepo.existsById(id)) {
+            // Delete the order
+            orderRepo.deleteById(id);
+        } else {
+            // If the order does not exist, throw a not found exception
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found with id: " + id);
+        }
+    }
 }

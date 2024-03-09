@@ -68,4 +68,12 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
+    @DeleteMapping("/{orderId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<String> deleteOrder(@PathVariable int orderId) {
+        orderService.deleteOrder(orderId);
+        return ResponseEntity.ok("Order with ID " + orderId + " deleted successfully.");
+
+    }
 }
