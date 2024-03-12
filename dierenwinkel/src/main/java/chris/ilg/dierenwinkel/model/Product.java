@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Product {
@@ -12,7 +13,7 @@ public class Product {
     private int id;
 
     @ManyToMany(mappedBy = "products")
-    private ArrayList<Orders> orders;
+    private List<Orders> orders = new ArrayList<Orders>();
     @Column(nullable = false, length = 255)
     private String name,description;
     @Column(nullable = false)
@@ -84,11 +85,11 @@ public class Product {
         this.categories = categories;
     }
 
-    public ArrayList<Orders> getOrders() {
+    public List<Orders> getOrders() {
         return orders;
     }
 
-    public void setOrders(ArrayList<Orders> orders) {
+    public void setOrders(List<Orders> orders) {
         this.orders = orders;
     }
 }

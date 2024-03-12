@@ -2,9 +2,34 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import axios from 'axios';
+
 
 function App() {
   const [count, setCount] = useState(0)
+  async function product(){
+    try {
+      // Fetch data from the specified URL
+      let response = await axios.get("http://localhost:8080/product");
+
+      // Check if the response is successful
+      if (response.ok) {
+          // Parse the response JSON
+          let data = await response.json();
+          
+          console.log(data);
+          return data;
+      } else {
+          // If response is not successful, throw an error
+          throw new Error('Failed to fetch data');
+      }
+  } catch (error) {
+      // Handle any errors that occur during the fetch operation
+      console.error('Error fetching data:', error.message);
+      return null; // Return null if an error occurs
+  }
+  
+  }
 
   return (
     <>
@@ -26,7 +51,7 @@ function App() {
         </p>
       </div>
       <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
+       {/* {product()} */}
       </p>
     </>
   )
