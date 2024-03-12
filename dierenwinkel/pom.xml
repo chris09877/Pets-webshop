@@ -32,6 +32,12 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.28</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
@@ -72,7 +78,25 @@
         <propertyFileWillOverride>true</propertyFileWillOverride>
         </configuration>
         </plugin>
+           <plugin>
+               <groupId>org.liquibase</groupId>
+               <artifactId>liquibase-maven-plugin</artifactId>
+               <version>4.24.0</version>
+               <configuration>
+                   <changeLogFile>src/main/resources/db/changelog/db-changelog.xml</changeLogFile>
+                   <url>jdbc:mysql://localhost:3306/your_database</url>
+                   <username>your_username</username>
+                   <password>your_password</password>
+               </configuration>
+               <executions>
+                   <execution>
+                       <goals>
+                           <goal>update</goal>
+                       </goals>
+                   </execution>
+               </executions>
 
+           </plugin>
         </plugins>
         </build>
 
