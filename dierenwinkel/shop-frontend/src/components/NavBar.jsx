@@ -5,7 +5,7 @@ import PizzaShow from '../PizzaShow';
 import ValidateOrder from '../ValidateOrder';
 import AdminPanel from '../AdminPanel';
 import OrderShow from '../OrderShow';
-import Login from '../Login';
+import Login from './Login.jsx';
 import ProtectedRoute from './ProtectedRoutes';
 import { AuthProvider } from './AuthContext';
 import LogoutBtn from './LogoutBtn';
