@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const RegisterUserForm = () => {
   const [formData, setFormData] = useState({
@@ -10,7 +11,7 @@ const RegisterUserForm = () => {
     birthdate: '',
     phone: '',
     mail: '',
-    password
+    password: ''
   });
 
   const handleChange = (e) => {
@@ -21,8 +22,8 @@ const RegisterUserForm = () => {
     e.preventDefault();
     console.log(formData);
      // Custom validations
-     if (!formData.name.match(/^[a-zA-Z\s]*$/)) {
-      alert('Name cannot contain numbers');
+     if (!formData.firstname.match(/^[a-zA-Z\s]*$/)) {
+      alert('First name cannot contain numbers');
       return;
     }
 
@@ -34,12 +35,13 @@ const RegisterUserForm = () => {
     }
 
     try {
-      const csrfToken = document.querySelector("meta[name='_csrf']").getAttribute("content");
-      const response = await axios.post(`http://localhost:8080user/add`, formData,{
-        Headers:{
-          'X-CSRF-TOKEN': csrfToken
-        }
-      }
+      //const csrfToken = document.querySelector("meta[name='_csrf']").getAttribute("content");
+      const response = await axios.post(`http://localhost:8080/user/add`, formData
+      // ,{
+      //   Headers:{
+      //     'X-CSRF-TOKEN': csrfToken
+      //   }
+      // }
       );
       console.log('User added:', response.data);
       //console.log(`${config.apiUrl}/user/add/${storedUserId}`);
@@ -48,7 +50,7 @@ const RegisterUserForm = () => {
       // localStorage.clear();
       // window.location.href = '/';
     } catch (error) {
-      console.error('Error updating order:', error);
+      console.error('Error creating user:', error);
     }
   };
 
