@@ -18,7 +18,7 @@ const Login = () => {
     try {
       console.log(`${config.apiUrl}}/users/login`);
       console.log(credentials);
-      const response = await axios.post(`${config.apiUrl}/users/login`,
+      const response = await axios.post(`http://localhost:8080/user/login`,
         {
           headers: {
             credentials,
@@ -57,9 +57,9 @@ const Login = () => {
       >
         <input
           type="text"
-          placeholder="Username"
-          name="username"
-          value={credentials.username}
+          placeholder="mail"
+          name="mail"
+          value={credentials.mail}
           onChange={handleChange}
           
         />

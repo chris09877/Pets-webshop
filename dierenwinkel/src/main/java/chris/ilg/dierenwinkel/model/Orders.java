@@ -33,6 +33,28 @@ public class Orders {
     private String userInfo;
 
 
+
+    public enum Status {
+        done(1),
+        pending(2),
+        in_progress(3);
+
+        private final int value;
+
+        Status(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+    @Enumerated(EnumType.ORDINAL)
+    @Column(nullable = false)
+    private Orders.Status status;
+
+
+
     public int getId() {
         return id;
     }

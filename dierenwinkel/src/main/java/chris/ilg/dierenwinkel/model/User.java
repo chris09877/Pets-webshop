@@ -13,7 +13,7 @@ public class User {
     private int id;
 
     @Column(nullable = false, length = 255)
-    private String firstname,lastname, address;
+    private String firstname,lastname, address,password;
     @Column(nullable = false, length = 255)
     private String postcode, number;
     @Column(nullable = false)
@@ -91,6 +91,14 @@ public class User {
 
     public int getId() {
         return id;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public ArrayList<Orders> getOrders() {

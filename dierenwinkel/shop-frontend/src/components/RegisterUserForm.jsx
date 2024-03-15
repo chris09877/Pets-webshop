@@ -9,7 +9,8 @@ const RegisterUserForm = () => {
     number: '',
     birthdate: '',
     phone: '',
-    mail: ''
+    mail: '',
+    password
   });
 
   const handleChange = (e) => {
@@ -33,7 +34,13 @@ const RegisterUserForm = () => {
     }
 
     try {
-      const response = await axios.patch(`${config.apiUrl}/user/add`, formData);
+      const csrfToken = document.querySelector("meta[name='_csrf']").getAttribute("content");
+      const response = await axios.post(`http://localhost:8080user/add`, formData,{
+        Headers:{
+          'X-CSRF-TOKEN': csrfToken
+        }
+      }
+      );
       console.log('User added:', response.data);
       //console.log(`${config.apiUrl}/user/add/${storedUserId}`);
       alert('user registerred');

@@ -15,6 +15,7 @@ import java.util.function.Function;
 
 @Repository
 public interface UserRepo extends JpaRepository<User, Integer> {
+    User getUserByMail(String string);
 
     @Override
     void flush();

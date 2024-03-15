@@ -37,7 +37,12 @@
             <column name="content" type="TEXT" />
             <column name="user_id" type="INT">
                 <constraints nullable="true"/>
-            </column>        </createTable>
+            </column>
+            <column name="status" type="ENUM('done', 'pending', 'in_progress')">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
 
         <!-- User Table -->
         <createTable tableName="user">
@@ -52,6 +57,7 @@
             <column name="birthdate" type="DATE" />
             <column name="phone" type="VARCHAR(40)" />
             <column name="mail" type="VARCHAR(40)" />
+            <column name="password" type="VARCHAR(40)" />
         </createTable>
 
         <sql>INSERT INTO user (firstname, lastname, address, postcode, number, birthdate, phone, mail)
