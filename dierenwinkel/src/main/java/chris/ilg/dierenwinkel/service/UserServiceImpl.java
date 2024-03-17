@@ -26,4 +26,9 @@ public class UserServiceImpl implements UserService{
     public User getUserByMail(String mail) {
         return userRepo.getUserByMail(mail);
     }
+
+    @Override
+    public Boolean existByMail(String mail) {
+        return userRepo.existsByMail(mail);
+    }
 }

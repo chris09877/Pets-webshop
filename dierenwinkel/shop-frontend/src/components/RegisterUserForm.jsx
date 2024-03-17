@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const RegisterUserForm = () => {
+  
   const [formData, setFormData] = useState({
     firstname: '',
     lastname: '',
@@ -35,13 +36,19 @@ const RegisterUserForm = () => {
     }
 
     try {
+      let g = localStorage.getItem('csrfToken');
+      console.log(g);
+      console.log(localStorage.getItem('csrfToken'));
       //const csrfToken = document.querySelector("meta[name='_csrf']").getAttribute("content");
-      const response = await axios.post(`http://localhost:8080/user/add`, formData
-      // ,{
-      //   Headers:{
-      //     'X-CSRF-TOKEN': csrfToken
-      //   }
-      // }
+      const response = await axios.post(
+        'http://localhost:8080/user/add',
+        formData,
+        {
+          withCredentials: false,
+          headers: {
+            'X-CSRF-Token': localStorage.getItem('csrfToken'), // Include the CSRF token in the request headers
+          },
+        }
       );
       console.log('User added:', response.data);
       //console.log(`${config.apiUrl}/user/add/${storedUserId}`);

@@ -14,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Map;
 
-@CrossOrigin
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -80,6 +80,33 @@ public class UserController {
             // Handle any unexpected errors
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred: " + e.getMessage());
         }
+    }
+
+    @PostMapping
+    public ResponseEntity<String> register(@RequestBody User registrationRequest) {
+        // Check if user already exists with the provided email
+        if (userService.existByMail(registrationRequest.getMail())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("User with this email already exists");
+        }
+
+        // Create a new user object
+        User user = new User();
+        user.setFirstname(registrationRequest.getFirstname());
+        user.setLastname(registrationRequest.getLastname());
+        user.setAddress(registrationRequest.getAddress());
+        user.setPostcode(registrationRequest.getPostcode());
+        user.setNumber(registrationRequest.getNumber());
+        user.setBirthdate(registrationRequest.getBirthdate());
+        user.setPhone(registrationRequest.getPhone());
+        user.setMail(registrationRequest.getMail());
+        user.setPassword(new BCryptPasswordEncoder().encode(registrationRequest.getPassword()));
+        // Set up orders as an empty list for now
+        //user.setOrders(new ArrayList<>());
+
+        // Save the user using your user service
+
+        userService.saveUser(user);
+        return ResponseEntity.ok("User registered successfully");
     }
 
 }

@@ -6,4 +6,5 @@ public interface UserService {
     public User saveUser(User user);
     public User getUserById(int id);
     public User getUserByMail(String mail);
+    public Boolean existByMail(String mail);
 }
