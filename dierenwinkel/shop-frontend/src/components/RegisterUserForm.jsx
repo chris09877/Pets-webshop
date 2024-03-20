@@ -14,7 +14,11 @@ const RegisterUserForm = () => {
     mail: '',
     password: ''
   });
-
+  async function getCsrfToken(){
+    let token = document.querySelector("meta[name='_csrf']").getAttribute("content");
+    console.log(`The token in the meta tag ${token}`);
+    return token;
+  }
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -36,17 +40,14 @@ const RegisterUserForm = () => {
     }
 
     try {
-      let g = localStorage.getItem('csrfToken');
-      console.log(g);
-      console.log(localStorage.getItem('csrfToken'));
-      //const csrfToken = document.querySelector("meta[name='_csrf']").getAttribute("content");
+      
       const response = await axios.post(
-        'http://localhost:8080/user/add',
+        'http://localhost:8080/api/user/add',
         formData,
         {
           withCredentials: false,
           headers: {
-            'X-CSRF-Token': localStorage.getItem('csrfToken'), // Include the CSRF token in the request headers
+            'X-CSRF-Token': getCsrfToken()
           },
         }
       );

@@ -1,3 +1,4 @@
+/*
 package chris.ilg.dierenwinkel.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,3 +21,4 @@ public class CsrfController {
         return tokenMap;
     }
 }
+*/
