@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/api/product")
 public class ProductController {
     @Autowired
     private ProductService productService;
@@ -41,7 +41,7 @@ public class ProductController {
         }
     }
 
-    @GetMapping("")
+    @GetMapping("/all")
     public ResponseEntity<ArrayList<Product>> getAll() {
         logger.info("Getting all products");
 
