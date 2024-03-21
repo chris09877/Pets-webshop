@@ -1,8 +1,17 @@
+import FormLogin  from "../components/FormLogin";
+
+const Login = () => {
 
 
-const Login = () => [
 
 
-]
+
+    return(
+        <FormLogin />
+    );
+}
+
+
+
 
 export default Login;
