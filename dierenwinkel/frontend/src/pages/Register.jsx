@@ -4,7 +4,11 @@ import RegisterUserForm from "../components/RegisterUserForm";
 
 const Register = () => {
     return(
-        <RegisterUserForm />       
+              <div className="bg-white p-6 max-w-sm mx-auto rounded-xl shadow-md flex items-center space-x-4" >
+
+        <RegisterUserForm />  
+        
+        </div>     
     )
 }
 
