@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import config from "../../config";
 
 const Form = () => {
-  const storedUserId = localStorage.getItem('userId');
+  // const storedUserId = localStorage.getItem('userId');
 
   const [formData, setFormData] = useState({
     date: '',
@@ -37,7 +36,7 @@ const Form = () => {
     try {
       const response = await axios.patch(`${config.apiUrl}/orders`, formData);
       console.log('Order updated:', response.data);
-      console.log(`${config.apiUrl}/orders/checkout/${storedUserId}`);
+      // console.log(`${config.apiUrl}/orders/checkout/${storedUserId}`);
       alert('Order proceed');
       //localStorage.setItem('userId', null);
       localStorage.clear();
@@ -99,7 +98,7 @@ const Form = () => {
           
         />
       </div>
-      <input type="hidden" name='user' value={storedUserId} />
+      <input type="hidden" name='user' value={""} />
       <button type="submit">Submit</button>
     </form>
   );
