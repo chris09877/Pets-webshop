@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-
+import NavBar from "../components/NavBar";
 const Home = () => {
 
 // const [csrfToken, setCsrfToken] = useState([]);
@@ -31,7 +31,10 @@ const storedToken = localStorage.getItem('csrfToken');
 // }
 
     return (
+        <>
+        <NavBar />
         <h1>HELLO WORLD</h1>
+        </>
     )
 
 }

@@ -1,14 +1,13 @@
 import React from 'react';
 import { Routes, Route, NavLink, BrowserRouter } from 'react-router-dom';
-import Pizzas from '../Pizzas';
-import PizzaShow from '../PizzaShow';
-import ValidateOrder from '../ValidateOrder';
-import AdminPanel from '../AdminPanel';
-import OrderShow from '../OrderShow';
-import Login from './Login.jsx';
-import ProtectedRoute from './ProtectedRoutes';
-import { AuthProvider } from './AuthContext';
-import LogoutBtn from './LogoutBtn';
+import Home from '../pages/Home.jsx';
+import OrderConfirmation from '../pages/OrderConfirmation.jsx';
+import Product from '../pages/Product.jsx';
+import Register from '../pages/Register.jsx';
+import Catalog from '../pages/Catalog.jsx';
+import Login from '../pages/Login.jsx';
+// import { AuthProvider } from './AuthContext';
+import LogoutBtn from './LogoutBtn.jsx';
 const Navbar = () => {
   // Check if token exists in cookies or local storage
   const tokenExists = localStorage.getItem('token');// || document.cookie.includes('token');
@@ -23,7 +22,7 @@ const Navbar = () => {
             <NavLink to="/" >Home</NavLink>
           </li>
           <li>
-            <NavLink to="/pizzas" >Menu</NavLink>
+            <NavLink to="/catalog" >Catalog</NavLink>
           </li>
           <li>
             <NavLink to="/checkout" >Checkout</NavLink>

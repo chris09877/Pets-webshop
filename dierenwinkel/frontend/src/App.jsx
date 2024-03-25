@@ -27,7 +27,7 @@ function App() {
         <Route path='/product' element={<Product/>}>     p   </Route>
 
        
-        <Route path='/validation' element={<OrderConfirmation/>}>o
+        <Route path='/checkout' element={<OrderConfirmation/>}>o
 
         </Route>
       </Routes>

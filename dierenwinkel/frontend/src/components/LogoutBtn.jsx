@@ -1,11 +1,11 @@
 import React from 'react';
-import { useAuth } from './AuthContext';
+//import { useAuth } from './AuthContext';
 
 const LogoutBtn = () => {
-  const { logout } = useAuth();
+  //const { logout } = useAuth();
 
   const handleLogout = () => {
-    logout();
+   // logout();
     window.location = '/';
 
   };
