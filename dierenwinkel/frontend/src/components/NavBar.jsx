@@ -9,15 +9,12 @@ import Login from '../pages/Login.jsx';
 // import { AuthProvider } from './AuthContext';
 import LogoutBtn from './LogoutBtn.jsx';
 const Navbar = () => {
-  // Check if token exists in cookies or local storage
-  const tokenExists = localStorage.getItem('token');// || document.cookie.includes('token');
+  const tokenExists = localStorage.getItem('token');
 
   return (
-
-    <div >
-
-      <nav >
-        <ul >
+    <div className="flex justify-center">
+      <nav className="w-full">
+        <ul className="flex justify-center space-x-4">
           <li>
             <NavLink to="/" >Home</NavLink>
           </li>
@@ -29,7 +26,6 @@ const Navbar = () => {
           </li>
           {tokenExists && (
             <>
-
               <li>
                 <NavLink to="/admin panel" >Admin Panel</NavLink>
               </li>
@@ -39,17 +35,14 @@ const Navbar = () => {
             </>
           )}
           {tokenExists === null && (
-            <div >
+            <div>
               <button className="flex justify-end ml-10">
                 <NavLink to="/login" >Login</NavLink>
               </button>
             </div>
           )}
         </ul>
-
       </nav>
-
-
     </div>
   );
 };

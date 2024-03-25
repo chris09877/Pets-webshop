@@ -31,11 +31,19 @@ const storedToken = localStorage.getItem('csrfToken');
 // }
 
     return (
-        <>
+        
+
+    <div className="flex flex-col min-h-screen">
+        <div className="flex justify-center">
         <NavBar />
-        <h1>HELLO WORLD</h1>
-        </>
-    )
+        </div>
+    <main>
+    <h1>HELLO WORLD</h1>
+    </main>
+    
+</div>
+
+         )
 
 }
 
