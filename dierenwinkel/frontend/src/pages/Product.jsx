@@ -1,6 +1,7 @@
 import Navbar from "../components/NavBar";
 import axios from 'axios';
 import { Link } from "react-router-dom";
+import OrderDetails from '../components/OrderDetails';
 
 
 const Product =  () =>  {
