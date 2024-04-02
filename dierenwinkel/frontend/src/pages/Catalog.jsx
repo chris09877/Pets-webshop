@@ -13,21 +13,21 @@
 //         async function getCsrfToken() {
 //             let cookieArray = document.cookie.split(';');
 //             let csrfToken = null;
-            
+
 //             cookieArray.forEach(cookie => {
 //                 let trimmedCookie = cookie.trim();
 //                 if (trimmedCookie.startsWith("_xsrf=")) {
 //                     csrfToken = trimmedCookie.substring("_xsrf=".length);
 //                 }
 //             });
-            
+
 //             return csrfToken;
 //         }
-    
+
 //         async function fetchProducts() {
 //             const token = await getCsrfToken();
 //             console.log(token); 
-            
+
 //             try {
 //                 const response = await axios.get('http://localhost:8080/api/product/all', {
 //                     // headers: {
@@ -40,21 +40,21 @@
 //                 return []; 
 //             }
 //         }
-    
+
 //         async function loadProducts() {
 //             const products = await fetchProducts();
 //             console.log(products); 
 //             setProducts(products); 
 //         }
-    
+
 //         loadProducts();
 
 
-        
+
 //     }, []); 
-    
+
 //     const handleOrderClick = async () => {
-        
+
 //     };
 
 //     const handleSubmit = async (e) => {
@@ -157,7 +157,7 @@
 //                 </div>
 
 //             }
-        
+
 //       </main>
 
 //       <footer className="bg-gray-500 text-white p-4">
@@ -180,7 +180,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import OrderDetails from '../components/OrderDetails';
-import Navbar from '../components/NavBar';
+import NavBar from '../components/NavBar';
 
 const Catalog = () => {
     const [products, setProducts] = useState([]);
@@ -209,18 +209,32 @@ const Catalog = () => {
     };
 
     return (
-        <div className="bg-gray-100 min-h-screen">
-            <header className="bg-blue-500 text-white p-4">
-                <h1 className="text-2xl font-bold">Welcome to My Website</h1>
+        <>
+            {/* <div className="bg-gray-100 min-h-screen"> */}
+            {/* <header className="bg-custom-gray text-white p-4">
+                <h1 className="text-2xl font-bold">Pets Pals</h1>
                 <div className="flex justify-center items-center">
                     <Navbar />
                 </div>
                 <div className="flex justify-start">
                     <button onClick={handleOrderClick}>START ORDERING</button>
                 </div>
+            </header> */}
+
+            <header className="bg-custom-gray text-white p-4 flex items-center justify-between">
+                <h1 className="text-2xl font-bold">Pets Pals</h1>
+                <div className="flex-grow flex justify-center">
+                    <img src="path/to/your/logo.png" alt="Logo" className="w-20 h-20" /> {/* Adjust the w-20 h-20 to fit your logo size */}
+                </div>
+                <div className="flex justify-end">
+                    <NavBar />
+                </div>
             </header>
 
             <main className="p-4">
+                <div className="flex justify-start">
+                    <button onClick={handleOrderClick}>START ORDERING</button>
+                </div>
                 <div>
                     <OrderDetails title="Your Order" />
                 </div>
@@ -258,10 +272,13 @@ const Catalog = () => {
                 </div>
             </main>
 
-            <footer className="bg-gray-500 text-white p-4">
-                <p>&copy; 2024 My Awesome Website</p>
-            </footer>
-        </div>
+            <div className="flex flex-col min-h-screen">
+                <footer className="bg-custom-gray text-white p-4 mt-auto">
+                    <p>&copy; 2024 My Awesome Website</p>
+                </footer>
+            </div>
+            {/* </div> */}
+        </>
     );
 };
 

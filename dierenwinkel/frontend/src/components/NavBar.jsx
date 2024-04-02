@@ -12,9 +12,9 @@ const Navbar = () => {
   const tokenExists = localStorage.getItem('token');
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-end">
       <nav className="w-full">
-        <ul className="flex justify-center space-x-4">
+        <ul className="flex justify-end space-x-4">
           <li>
             <NavLink to="/" >Home</NavLink>
           </li>
