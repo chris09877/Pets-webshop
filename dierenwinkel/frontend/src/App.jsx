@@ -16,15 +16,15 @@ function App() {
     <div>
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Home/>}>        </Route>
+        <Route path='/' element={<Home/>}></Route>
 
-        <Route path='/login' element={<Login/>}>     login   </Route>
+        <Route path='/login' element={<Login/>}></Route>
 
-        <Route path='/register' element={<Register/>}>register</Route>
+        <Route path='/register' element={<Register/>}></Route>
 
-        <Route path='/catalog' element={<Catalog/>}>     c   </Route>
+        <Route path='/catalog' element={<Catalog/>}>  </Route>
 
-        <Route path='/product' element={<Product/>}>     p   </Route>
+        <Route path='/product' element={<Product/>}></Route>
 
        
         <Route path='/checkout' element={<OrderConfirmation/>}>o

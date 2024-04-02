@@ -31,7 +31,7 @@ const Home = () => {
   // }
 
 
-  const [isHowItWorksExpanded, setIsHowItWorksExpanded] = useState(false);
+  const [isHowItWorksExpanded, setIsHowItWorksExpanded] = useState(true);
   const [isJoinCommunityExpanded, setIsJoinCommunityExpanded] = useState(false);
 
   // Function to toggle the visibility of How It Works section
