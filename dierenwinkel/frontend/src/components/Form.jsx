@@ -50,8 +50,8 @@ const Form = () => {
   return (
     <form onSubmit={handleSubmit} className="my-form max-w-md mx-auto p-4 bg-white shadow-md rounded-lg">
 
-      <div >
-        <label htmlFor="order_date" >Order Date:</label>
+      <div className="flex flex-col space-y-1">
+        <label htmlFor="order_date" className="text-gray-600">Order Date:</label>
         <input
           type="datetime-local"
           id="order_date"
@@ -59,11 +59,11 @@ const Form = () => {
           required
           value={formData.order_date}
           onChange={handleChange}
-          
+          className="p-2 border rounded-md"
         />
       </div>
-      <div >
-        <label htmlFor="name" >Name:</label>
+      <div className="flex flex-col space-y-1">
+        <label htmlFor="name" className="text-gray-600">Name:</label>
         <input
           type="text"
           id="name"
@@ -71,11 +71,11 @@ const Form = () => {
           required
           value={formData.name}
           onChange={handleChange}
-          
+          className="p-2 border rounded-md"
         />
       </div>
-      <div >
-        <label htmlFor="phone" >Phone:</label>
+      <div className="flex flex-col space-y-1">
+        <label htmlFor="phone" className="text-gray-600">Phone:</label>
         <input
           type="text"
           id="phone"
@@ -83,11 +83,11 @@ const Form = () => {
           required
           value={formData.phone}
           onChange={handleChange}
-          
+          className="p-2 border rounded-md"
         />
       </div>
-      <div >
-        <label htmlFor="address" >Address:</label>
+      <div className="flex flex-col space-y-1">
+        <label htmlFor="address" className="text-gray-600">Address:</label>
         <input
           type="text"
           id="address"
@@ -95,7 +95,7 @@ const Form = () => {
           required
           value={formData.address}
           onChange={handleChange}
-          
+          className="p-2 border rounded-md"
         />
       </div>
       <input type="hidden" name='user' value={""} />
