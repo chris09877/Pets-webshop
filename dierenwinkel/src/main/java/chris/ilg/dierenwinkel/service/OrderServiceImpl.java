@@ -16,8 +16,10 @@ public class OrderServiceImpl implements OrderService{
     @Autowired
     private OrderRepo orderRepo;
     @Override
-    public Orders saveOrder(Orders order) {
+    public Orders saveOrder(OrdersDto ordersDto) {
+        Orders order = new Orders(ordersDto) ;
         return orderRepo.save(order);
+
     }
 
     @Override

@@ -6,10 +6,10 @@ import org.hibernate.query.Order;
 import java.util.ArrayList;
 
 public interface OrderService {
-    public Orders saveOrder(Orders order);
+    public Orders saveOrder(OrdersDto ordersDto);
     public ArrayList<Orders> getAllOrders();
     public Orders getOrderById(int id);
-    public Orders updateOrder(String userInfo, Orders updatedOrder);
+    public Orders updateOrder(String userInfo, OrdersDto updatedOrderDto);
     public Orders getOrderByUserInfo(String userInfo);
     public void deleteOrder(int id);
 

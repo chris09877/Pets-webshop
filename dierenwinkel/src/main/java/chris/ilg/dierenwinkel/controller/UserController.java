@@ -1,6 +1,7 @@
 package chris.ilg.dierenwinkel.controller;
 
 import chris.ilg.dierenwinkel.model.User;
+import chris.ilg.dierenwinkel.service.UserDto;
 import chris.ilg.dierenwinkel.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +17,10 @@ public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
     @PostMapping("/add")
-    public String add (@RequestBody User user){
-        logger.info("Received new user A ZBEEEEEE: {}", user);
+    public String add (@RequestBody UserDto userDto){
+        logger.info("Received new user A ZBEEEEEE: {}", userDto);
 
-        userService.saveUser(user);
+        userService.saveUser(userDto);
         return "new user added";
     }
     @GetMapping("/{id}")

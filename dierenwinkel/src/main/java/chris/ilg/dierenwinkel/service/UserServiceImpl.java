@@ -13,8 +13,10 @@ public class UserServiceImpl implements UserService{
 
 
     @Override
-    public User saveUser(User user) {
+    public User saveUser(UserDto userDto) {
+        User user = new User(passwordEncoder.encode(userDto.getPassword());
         return userRepo.save(user);
+
     }
 
     @Override

@@ -3,7 +3,7 @@ package chris.ilg.dierenwinkel.model;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 
 @Entity
 public class User {
@@ -19,7 +19,7 @@ public class User {
     @Column(nullable = false)
     private Date birthdate;
     @Column(nullable = false, length = 40, unique = true)
-    private String phone, mail;
+    private String phone, mail,password;
 
     @OneToMany(mappedBy = "user")
     private ArrayList<Orders> orders;
@@ -87,6 +87,14 @@ public class User {
 
     public void setBirthdate(Date birthdate) {
         this.birthdate = birthdate;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public int getId() {
