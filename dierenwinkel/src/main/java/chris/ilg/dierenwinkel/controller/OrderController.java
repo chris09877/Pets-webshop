@@ -2,6 +2,7 @@ package chris.ilg.dierenwinkel.controller;
 
 import chris.ilg.dierenwinkel.model.Orders;
 import chris.ilg.dierenwinkel.service.OrderServiceImpl;
+import chris.ilg.dierenwinkel.service.OrdersDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +20,10 @@ public class OrderController {
     private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
     @PostMapping("/add")
-    public String add(@RequestBody Orders order){
-        logger.info("Received new order A ZBEEEEEE: {}", order);
-        orderService.saveOrder(order);
+    public String add(@RequestBody OrdersDto ordersDto){
+        logger.info("Received new order A ZBEEEEEE: {}", ordersDto);
+        Orders order = new Orders(ordersDto);
+        orderService.saveOrder(ordersDto);
         return "New order is added";
     }
 

@@ -36,15 +36,15 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     @Transactional
-    public Orders updateOrder(String userInfo, Orders updatedOrder) {
+    public Orders updateOrder(String userInfo, OrdersDto updatedOrderDto) {
         Orders existingOrder = orderRepo.findByUserInfo(userInfo);
 
         if (existingOrder != null) {
             // Update the necessary fields
-            existingOrder.setDate(updatedOrder.getDate());
-            existingOrder.setContent(updatedOrder.getContent());
-            existingOrder.setUserInfo(updatedOrder.getUserInfo());
-            existingOrder.setUser(updatedOrder.getUser());//pas très sur que ca va marcher
+            existingOrder.setDate(updatedOrderDto.getDate());
+            existingOrder.setContent(updatedOrderDto.getContent());
+            existingOrder.setUserInfo(updatedOrderDto.getUserInfo());
+           // existingOrder.setUser(updatedOrderDto.getUser());//pas très sur que ca va marcher
 
 
             return orderRepo.save(existingOrder);

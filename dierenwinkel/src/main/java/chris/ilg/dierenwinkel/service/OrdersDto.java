@@ -1,5 +1,7 @@
 package chris.ilg.dierenwinkel.service;
 
+import chris.ilg.dierenwinkel.model.Product;
+
 import java.sql.Date;
 import java.util.List;
 
@@ -7,7 +9,7 @@ public class OrdersDto {
 
     private int id;
     private int userId;
-    private List<Integer> productIds; // Assuming only product IDs are needed in the DTO
+    private List<Product> products; // Assuming only product IDs are needed in the DTO
     private String content;
     private Date date;
     private String userInfo;
@@ -30,12 +32,12 @@ public class OrdersDto {
         this.userId = userId;
     }
 
-    public List<Integer> getProductIds() {
-        return productIds;
+    public List<Product> getProducts() {
+        return products;
     }
 
-    public void setProductIds(List<Integer> productIds) {
-        this.productIds = productIds;
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 
     public String getContent() {

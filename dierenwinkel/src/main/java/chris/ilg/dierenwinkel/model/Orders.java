@@ -1,6 +1,12 @@
 package chris.ilg.dierenwinkel.model;
 
+import chris.ilg.dierenwinkel.controller.UserController;
+import chris.ilg.dierenwinkel.repository.UserRepo;
+import chris.ilg.dierenwinkel.service.OrdersDto;
+import chris.ilg.dierenwinkel.service.UserServiceImpl;
 import jakarta.persistence.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 
 import java.util.ArrayList;
 import java.sql.Date;
@@ -8,6 +14,19 @@ import java.util.List;
 
 @Entity
 public class Orders {
+    public Orders() {}
+
+    public Orders(OrdersDto ordersDto) {
+        // Initialize Orders object using data from OrdersDto
+        this.content = ordersDto.getContent();
+        this.date = ordersDto.getDate();
+        this.products = ordersDto.getProducts();
+        this.userInfo = ordersDto.getUserInfo();
+        this.user = UserServiceImpl.getUserById(ordersDto.getUserId());
+
+    }
+
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
