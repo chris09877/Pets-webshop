@@ -16,6 +16,12 @@ public class UserDto {
     private String password;
     private ArrayList<Integer> orderIds;
 
+    public UserDto() {
+    }
+
+    public UserDto(int id) {
+        this.id = id;
+            }
 
     public int getId() {
         return id;

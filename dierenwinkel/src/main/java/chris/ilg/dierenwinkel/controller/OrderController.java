@@ -54,9 +54,9 @@ public class OrderController {
     }
 
     @PatchMapping("")
-    public Orders updateOrder(@RequestParam String userInfo, @RequestBody Orders updatedOrder) {
+    public Orders updateOrder(@RequestParam String userInfo, @RequestBody OrdersDto updatedOrderDto) {
         logger.info("Updating the order with user info: " + userInfo);
-        return orderService.updateOrder(userInfo, updatedOrder);
+        return orderService.updateOrder(userInfo, updatedOrderDto);
     }
 
     @GetMapping("/find")

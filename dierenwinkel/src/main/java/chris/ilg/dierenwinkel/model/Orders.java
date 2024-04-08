@@ -22,7 +22,7 @@ public class Orders {
         this.date = ordersDto.getDate();
         this.products = ordersDto.getProducts();
         this.userInfo = ordersDto.getUserInfo();
-        this.user = UserServiceImpl.getUserById(ordersDto.getUserId());
+        this.user = UserServiceImpl.getUserByID(ordersDto.getUserId());
 
     }
 

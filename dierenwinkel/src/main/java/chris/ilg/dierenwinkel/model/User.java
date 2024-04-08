@@ -1,9 +1,17 @@
 package chris.ilg.dierenwinkel.model;
 
+import chris.ilg.dierenwinkel.repository.OrderRepo;
+import chris.ilg.dierenwinkel.service.OrderServiceImpl;
+import chris.ilg.dierenwinkel.service.UserDto;
+import chris.ilg.dierenwinkel.service.UserServiceImpl;
 import jakarta.persistence.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.sql.Date;
+import java.util.List;
+
 
 @Entity
 public class User {
@@ -15,14 +23,33 @@ public class User {
     @Column(nullable = false, length = 255)
     private String firstname,lastname, address;
     @Column(nullable = false, length = 255)
-    private String postcode, number;
+    private String postcode, number,password;
     @Column(nullable = false)
     private Date birthdate;
     @Column(nullable = false, length = 40, unique = true)
-    private String phone, mail,password;
+    private String phone, mail;
 
     @OneToMany(mappedBy = "user")
-    private ArrayList<Orders> orders;
+    private List<Orders> orders;
+
+
+    public User(UserDto userDto, PasswordEncoder passwordEncoder){
+        this.address = userDto.getAddress();
+        this.birthdate = userDto.getBirthdate();
+        this.mail = userDto.getMail();
+        this.firstname = userDto.getFirstname();
+        this.lastname = userDto.getLastname();
+        this.number = userDto.getNumber();
+        this.phone = userDto.getPhone();
+        this.postcode = userDto.getPostcode();
+        this.password = passwordEncoder.encode(userDto.getPassword()).toString();
+//        OrderServiceImpl orderServiceImpl = new OrderServiceImpl();
+//        this.orders =  orderServiceImpl.getAllOrdersById(userDto.getOrderIds());
+
+
+    }
+
+    public User() {    }
 
     public String getPhone() {
         return phone;
@@ -101,11 +128,11 @@ public class User {
         return id;
     }
 
-    public ArrayList<Orders> getOrders() {
+    public List<Orders> getOrders() {
         return orders;
     }
 
-    public void setOrders(ArrayList<Orders> orders) {
+    public void setOrders(List<Orders> orders) {
         this.orders = orders;
     }
 }
