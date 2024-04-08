@@ -6,7 +6,7 @@ import axios from 'axios';
 
 const FormLogin = () => {
   //const { setAuthInfo } = useAuth();
-  const [credentials, setCredentials] = useState({ username: '', password: '' });
+  const [credentials, setCredentials] = useState({ mail: '', pwd: '' });
   //   const navigate = useNavigate();
 
   //   const redirect = () => {
@@ -14,17 +14,16 @@ const FormLogin = () => {
   //     navigate('/admin panel');
   //   }
   const handleLogin = async () => {
-    // try {
-    //   //console.log(`${config.apiUrl}}/users/login`);
-    //   console.log(credentials);
-    //   const response = await axios.post(`http://localhost:8080/user/login`,
-    //     {
-    //       headers: {
-    //         credentials,
-    //       },
-    //       credentials: "include",
-    //     }
-    //   );
+    try {
+      //console.log(`${config.apiUrl}}/users/login`);
+      console.log(credentials);
+      const response = await axios.post(`http://localhost:8080/login`,credentials
+        // {
+        //   headers: {
+        //     credentials,
+        //   },
+        // }
+      );
 
     //   const token = response.data.token;
     //   setAuthInfo({ token: { token }, isAuthenticated: true });
@@ -33,9 +32,9 @@ const FormLogin = () => {
 
 
 
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    } catch (error) {
+      console.log(error);
+    }
 
   };
 
@@ -76,8 +75,8 @@ const FormLogin = () => {
                     type="password"
                     autoComplete="off"
                     placeholder="Password"
-                    name="password"
-                    value={credentials.password}
+                    name="pwd"
+                    value={credentials.pwd}
                     onChange={handleChange}
                     className="peer h-10 w-full border-b-2 border-gray-300 text-white focus:outline-none focus:borer-rose-600"
                   />

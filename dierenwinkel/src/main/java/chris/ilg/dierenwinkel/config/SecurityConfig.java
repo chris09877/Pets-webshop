@@ -21,10 +21,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -217,21 +219,33 @@ public class SecurityConfig   {
 
     @Autowired
     private UserRepo userRepo;
-
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("http://localhost:5173/**").allowedMethods("*");
+    }
     @Bean
-    @Order(0)
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.disable())
+                .cors(cors -> cors.configurationSource(request -> {
+            CorsConfiguration config = new CorsConfiguration();
+            config.setAllowedOrigins(Collections.singletonList("http://localhost:5173")); // Replace with your frontend origin
+            config.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "PATCH", "DELETE"));
+            config.setAllowedHeaders(Arrays.asList("Content-Type", "POST")); // Adjust as needed
+            config.setAllowCredentials(true);
+            return config;}))
                 .csrf((csrf) -> csrf.disable())
                  ;
 
         return http.build();
     }
-    @Order(1)
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf((csrf) -> csrf.disable())
-              .cors(cors -> cors.disable())
+        http
+//                .csrf((csrf) -> csrf.disable())
+//              .cors(cors -> cors.configurationSource(request -> {
+//                  CorsConfiguration config = new CorsConfiguration();
+//                  config.setAllowedOrigins(Collections.singletonList("http://localhost:5173/*")); // Replace with your frontend origin
+//                  config.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "PATCH", "DELETE"));
+//                  config.setAllowCredentials(true);
+//                  return config;}))
 
                 /*.cors().configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
