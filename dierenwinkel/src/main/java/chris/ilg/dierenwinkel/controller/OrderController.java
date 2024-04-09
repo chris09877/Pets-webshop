@@ -53,16 +53,16 @@ public class OrderController {
 
     }
 
-    @PatchMapping("")
-    public Orders updateOrder(@RequestParam String userInfo, @RequestBody OrdersDto updatedOrderDto) {
-        logger.info("Updating the order with user info: " + userInfo);
-        return orderService.updateOrder(userInfo, updatedOrderDto);
+    @PatchMapping("/update")
+    public Orders updateOrder(@RequestParam Integer userId, @RequestBody OrdersDto updatedOrderDto) {
+        logger.info("Updating the order with user ID: " + userId);
+        return orderService.updateOrder(userId, updatedOrderDto);
     }
 
     @GetMapping("/find")
-    public ResponseEntity<Orders> getOrderByUserInfo(@RequestParam String userInfo) {
-        logger.info("Getting the order with user info: " + userInfo);
-        Orders order = orderService.getOrderByUserInfo(userInfo);
+    public ResponseEntity<Orders> getOrderByUserInfo(@RequestParam Integer userId) {
+        logger.info("Getting the order with user id: " + userId);
+        Orders order = orderService.getOrderByUserId(userId);
         if (order != null ){
             return ResponseEntity.ok(order);
         }

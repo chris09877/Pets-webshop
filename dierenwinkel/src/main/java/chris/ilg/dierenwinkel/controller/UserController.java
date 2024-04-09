@@ -24,13 +24,14 @@ public class UserController {
         return "new user added";
     }
     @GetMapping("/{id}")
-    public ResponseEntity<User> get (@PathVariable int id)
+    public ResponseEntity<UserDto> get (@PathVariable int id)
     {
         logger.info("FIND USER WITH ID:", id);
 
         User user  = userService.getUserById(id);
         if (user != null) {
-            return ResponseEntity.ok().body(user); // Return 200 OK response with the user entity
+            UserDto userDto = new UserDto(user);
+            return ResponseEntity.ok().body(userDto); // Return 200 OK response with the user entity
         } else {
             return ResponseEntity.notFound().build(); // Return 404 Not Found response if user not found
         }

@@ -4,6 +4,7 @@ import chris.ilg.dierenwinkel.repository.OrderRepo;
 import chris.ilg.dierenwinkel.service.OrderServiceImpl;
 import chris.ilg.dierenwinkel.service.UserDto;
 import chris.ilg.dierenwinkel.service.UserServiceImpl;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,6 +30,7 @@ public class User {
     @Column(nullable = false, length = 40, unique = true)
     private String phone, mail;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Orders> orders;
 

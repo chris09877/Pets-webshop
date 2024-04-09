@@ -45,8 +45,8 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     @Transactional
-    public Orders updateOrder(String userInfo, OrdersDto updatedOrderDto) {
-        Orders existingOrder = orderRepo.findByUserInfo(userInfo);
+    public Orders updateOrder(Integer userId, OrdersDto updatedOrderDto) {
+        Orders existingOrder = orderRepo.findByUserId(userId);
 
         if (existingOrder != null) {
             // Update the necessary fields
@@ -59,18 +59,18 @@ public class OrderServiceImpl implements OrderService{
             return orderRepo.save(existingOrder);
         }
         else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found for userInfo: " + userInfo);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found for userInfo: " + userId);
         }
     }
 
     @Override
-    public Orders getOrderByUserInfo(String userInfo) {
-        Orders existingOrder = orderRepo.findByUserInfo(userInfo);
+    public Orders getOrderByUserId(Integer userId) {
+        Orders existingOrder = orderRepo.findByUserId(userId);
         if (existingOrder != null) {
             return existingOrder;
         }
         else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found for userInfo: " + userInfo);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found for userInfo: " + userId);
         }
     }
 

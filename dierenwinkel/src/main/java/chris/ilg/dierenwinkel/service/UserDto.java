@@ -1,5 +1,8 @@
 package chris.ilg.dierenwinkel.service;
 
+import chris.ilg.dierenwinkel.model.Orders;
+import chris.ilg.dierenwinkel.model.User;
+
 import java.sql.Date;
 import java.util.ArrayList;
 
@@ -15,8 +18,24 @@ public class UserDto {
     private String mail;
     private String password;
     private ArrayList<Integer> orderIds;
-
     public UserDto() {
+    }
+
+    public UserDto(User user) {
+        this.id = id;
+        this.firstname = user.getFirstname();
+        this.lastname = user.getLastname();
+        this.address = user.getAddress();
+        this.postcode = user.getPostcode();
+        this.number = user.getNumber();
+        this.birthdate = user.getBirthdate();
+        this.phone = user.getPhone();
+        this.mail = user.getMail();
+        this.password = user.getPassword();
+        OrderServiceImpl orderServiceImpl = new OrderServiceImpl();
+        ArrayList<Integer> orders = new ArrayList<>();
+        user.getOrders().forEach(order ->  orders.add(order.getId()));
+        this.orderIds = orders;
     }
 
     public UserDto(int id) {

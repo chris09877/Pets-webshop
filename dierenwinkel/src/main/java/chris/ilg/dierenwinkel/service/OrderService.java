@@ -10,8 +10,8 @@ public interface OrderService {
     public Orders saveOrder(OrdersDto ordersDto);
     public ArrayList<Orders> getAllOrders();
     public Orders getOrderById(int id);
-    public Orders updateOrder(String userInfo, OrdersDto updatedOrderDto);
-    public Orders getOrderByUserInfo(String userInfo);
+    public Orders updateOrder(Integer userId, OrdersDto updatedOrderDto);
+    public Orders getOrderByUserId(Integer userId);
     public void deleteOrder(int id);
     public List<Orders> getAllOrdersById(List<Integer> ids);
 

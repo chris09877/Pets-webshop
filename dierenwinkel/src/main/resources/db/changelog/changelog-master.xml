@@ -57,7 +57,7 @@
         </createTable>
 
     </changeSet>
-    <include file="db/user.sql" />
-    <include file="db/product.sql" />
-    <include file="db/data.sql" />
+<!--    <include file="db/user.sql" />-->
+<!--    <include file="db/product.sql" />-->
+<!--    <include file="db/data.sql" />-->
 </databaseChangeLog>

@@ -12,7 +12,7 @@ import java.util.List;
 public interface OrderRepo extends JpaRepository<Orders, Integer> {
 
 
-        Orders findByUserInfo(String userInfo);
+        Orders findByUserId(Integer userId);
         List<Orders> findAllById(Iterable<Integer> ids);
 
 }
