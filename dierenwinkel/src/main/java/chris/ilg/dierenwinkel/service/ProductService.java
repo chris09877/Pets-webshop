@@ -11,6 +11,6 @@ public interface ProductService {
     public Product saveProduct(Product product);
     public Product getProductById(int id);
     public ArrayList<Product> getAllProduct();
-    //public ArrayList<Product> getProductsByCategory(String category);
+    public ArrayList<Product> getProductsByCategory(String category);
 
 }

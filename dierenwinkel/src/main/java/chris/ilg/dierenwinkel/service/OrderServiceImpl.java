@@ -3,18 +3,27 @@ package chris.ilg.dierenwinkel.service;
 import chris.ilg.dierenwinkel.model.Orders;
 import chris.ilg.dierenwinkel.repository.OrderRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class OrderServiceImpl implements OrderService{
 
+
+    public OrderServiceImpl() {
+    }
+
+
+
+
     @Autowired
-    private OrderRepo orderRepo;
+    public OrderRepo orderRepo;
     @Override
     public Orders saveOrder(OrdersDto ordersDto) {
         Orders order = new Orders(ordersDto) ;
@@ -36,32 +45,32 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     @Transactional
-    public Orders updateOrder(String userInfo, OrdersDto updatedOrderDto) {
-        Orders existingOrder = orderRepo.findByUserInfo(userInfo);
+    public Orders updateOrder(Integer userId, OrdersDto updatedOrderDto) {
+        Orders existingOrder = orderRepo.findByUserId(userId);
 
         if (existingOrder != null) {
             // Update the necessary fields
             existingOrder.setDate(updatedOrderDto.getDate());
             existingOrder.setContent(updatedOrderDto.getContent());
             existingOrder.setUserInfo(updatedOrderDto.getUserInfo());
-           // existingOrder.setUser(updatedOrderDto.getUser());//pas très sur que ca va marcher
+            // existingOrder.setUser(updatedOrderDto.getUser());//pas très sur que ca va marcher
 
 
             return orderRepo.save(existingOrder);
         }
         else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found for userInfo: " + userInfo);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found for userInfo: " + userId);
         }
     }
 
     @Override
-    public Orders getOrderByUserInfo(String userInfo) {
-        Orders existingOrder = orderRepo.findByUserInfo(userInfo);
+    public Orders getOrderByUserId(Integer userId) {
+        Orders existingOrder = orderRepo.findByUserId(userId);
         if (existingOrder != null) {
             return existingOrder;
         }
         else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found for userInfo: " + userInfo);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found for userInfo: " + userId);
         }
     }
 
@@ -76,4 +85,15 @@ public class OrderServiceImpl implements OrderService{
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found with id: " + id);
         }
     }
+    public ArrayList<Orders> getAllOrdersById(List<Integer> ids){
+        if (ids != null ) {
+            List<Orders> ordersList = orderRepo.findAllById(ids);
+            ArrayList<Orders> ordersArray = new ArrayList<>();
+            ordersList.forEach(order -> ordersArray.add(order));
+            return ordersArray;
+        }
+        ArrayList<Orders> orders = new ArrayList<>();
+        return orders;
+    }
+
 }
