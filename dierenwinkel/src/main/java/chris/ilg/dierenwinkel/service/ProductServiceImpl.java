@@ -10,6 +10,7 @@ import java.util.ArrayList;
 @Service
 public class ProductServiceImpl implements ProductService{
 
+    private ArrayList<Product> allProduct;
 
     @Autowired
     private ProductRepo productRepo;
@@ -30,14 +31,25 @@ public class ProductServiceImpl implements ProductService{
 
 
         listOfProduct.addAll(productRepo.findAll());
+        allProduct = listOfProduct;
         return listOfProduct;
     }
-/*
-    @Override
-    public ArrayList<Product> getProductsByCategory() {
-        ArrayList<Product> listOfProduct = new ArrayList<>();
-        listOfProduct.addAll(productRepo.findAll());
-        return listOfProduct;
 
-    }*/
+    @Override
+    public ArrayList<Product> getProductsByCategory(String category) {
+        ArrayList<Product> productOfCategory = new ArrayList<>();
+
+
+        allProduct.forEach(product -> {
+            if (product.getCategories().name().equals(category.toUpperCase())) {
+                productOfCategory.add(product);
+            }
+
+        });
+
+        return productOfCategory;
+
+
+
+    }
 }

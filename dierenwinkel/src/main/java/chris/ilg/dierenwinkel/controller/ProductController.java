@@ -53,17 +53,20 @@ public class ProductController {
         }
 
     }
-    /*
-        @GetMapping("/{category}")
-        public ResponseEntity<ArrayList<Product>> getByCategory (@PathVariable String categroy)
-        {
-            logger.info("FIND PRODUCT WITH CATEGORY:";
 
-            Product p  = productService.getProductsByCategory();
-            if (p != null) {
-                return ResponseEntity.ok().body(p); // Return 200 OK response with the user entity
-            } else {
-                return ResponseEntity.notFound().build(); // Return 404 Not Found response if user not found
-            }
-        }*/
+    @GetMapping("/filter/{category}")
+    public ResponseEntity<ArrayList<Product>> getByCategory (@PathVariable String category)
+    {
+        logger.info("FIND PRODUCT WITH CATEGORY: " + category);
+        ArrayList<Product> productOfCategory = productService.getProductsByCategory(category);
+
+
+        if (productOfCategory != null) {
+            logger.info("amount of product found:" + productOfCategory.size());
+
+            return ResponseEntity.ok().body(productOfCategory); // Return 200 OK response with the user entity
+        } else {
+            return ResponseEntity.notFound().build(); // Return 404 Not Found response if user not found
+        }
+    }
 }
