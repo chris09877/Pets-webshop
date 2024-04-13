@@ -9,7 +9,7 @@ public class OrdersDto {
 
     private int id;
     private int userId;
-    private List<Product> products; // Assuming only product IDs are needed in the DTO
+    private List<Product> products;
     private String content;
     private Date date;
     private String userInfo;

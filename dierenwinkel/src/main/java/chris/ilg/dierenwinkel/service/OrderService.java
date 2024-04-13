@@ -14,6 +14,8 @@ public interface OrderService {
     public Orders getOrderByUserId(Integer userId);
     public void deleteOrder(int id);
     public List<Orders> getAllOrdersById(List<Integer> ids);
+    public Orders getOrderByUserInfo(String sessionId);
+
 
 
 }

@@ -1,43 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // import { useAuth } from './AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 //import config from "../config";
 
 const FormLogin = () => {
   //const { setAuthInfo } = useAuth();
-  const [credentials, setCredentials] = useState({ username: '', password: '' });
-  //   const navigate = useNavigate();
+  const [credentials, setCredentials] = useState({ mail: '', pwd: '' });
+  const [allCookies, setAllCookies] = useState({ mail: '', pwd: '' });
 
-  //   const redirect = () => {
-
-  //     navigate('/admin panel');
-  //   }
   const handleLogin = async () => {
-    // try {
-    //   //console.log(`${config.apiUrl}}/users/login`);
-    //   console.log(credentials);
-    //   const response = await axios.post(`http://localhost:8080/user/login`,
-    //     {
-    //       headers: {
-    //         credentials,
-    //       },
-    //       credentials: "include",
-    //     }
-    //   );
+    try {
+      const response = await axios.post('http://localhost:8080/login', credentials, {
+        withCredentials: true
+      });
+      console.log('Login successful:', response.data);
+      const cookies = response.headers['set-cookie'];
+      // const cookies = document.cookie;
+      console.log(response.headers.get('set-cookie'));
+      console.log(response.headers.get('Set-Cookie'));
+      console.log(response.headers.get('Set-Cookies'));
 
-    //   const token = response.data.token;
-    //   setAuthInfo({ token: { token }, isAuthenticated: true });
-    //   Cookies.set("token", token, { expires: 1 })
-    //   //window.location = '/admin panel';
+      console.log(response.headers);
+      console.log(response);
 
-
-
-    // } catch (error) {
-    //   console.log(error);
-    // }
-
+      if (cookies) {
+        const xsrfToken = cookies.find(cookie => cookie.startsWith('xsrf-token='));
+        if (xsrfToken) {
+          const tokenValue = xsrfToken.split(';')[0].split('=')[1];
+          console.log('XSRF Token:', tokenValue);
+          Cookies.set('csrf-token', tokenValue, { expires: 4 / 24 }); // Expires in 4 hours
+        }
+  
+        const session_id = cookies.find(cookie => cookie.startsWith('jsessionid='));
+        if (session_id) {
+          const sessionValue = session_id.split(';')[0].split('=')[1];
+          console.log('jsessionid:', sessionValue);
+          Cookies.set('session_id', sessionValue, { expires: 4 / 24 }); // Expires in 4 hours
+        }
+  
+        const userId = cookies.find(cookie => cookie.startsWith('userID='));
+        if (userId) {
+          const idValue = userId.split(';')[0].split('=')[1];
+          console.log('User ID:', idValue);
+          Cookies.set('userId', idValue, { expires: 4 / 24 }); // Expires in 4 hours
+        }
+      }
+    } 
+    catch (error) {
+      console.error('Login failed:', error.response ? error.response.data : error.message);
+    }
   };
+
+    
+
+  
 
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -76,8 +94,8 @@ const FormLogin = () => {
                     type="password"
                     autoComplete="off"
                     placeholder="Password"
-                    name="password"
-                    value={credentials.password}
+                    name="pwd"
+                    value={credentials.pwd}
                     onChange={handleChange}
                     className="peer h-10 w-full border-b-2 border-gray-300 text-white focus:outline-none focus:borer-rose-600"
                   />

@@ -1,35 +1,17 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import NavBar from "../components/NavBar";
+import Cookies from 'js-cookie';
+
 const Home = () => {
+  useEffect(() => {
+    // Create a cookie named 'jsessionid' with value 'example' that lasts for 4 hours
+    // Cookies.set('session_id', '', { expires:1 }); 
+    // Cookies.set('csrf-token', '', { expires: 1 }); 
+    // Cookies.set('userId', '', { expires: 1 }); 
 
-  // const [csrfToken, setCsrfToken] = useState([]);
-  // console.log(csrfToken);
-  const storedToken = localStorage.getItem('csrfToken');
 
-  // if (!storedToken) {
-  //     axios.get('http://localhost:8080/api/csrf-token')
-  //         .then(response => {
-  //             if (response.status !== 200) {
-  //                 throw new Error('Failed to fetch CSRF token');
-  //             }
-  //             const csrfToken = response.data.csrfToken;
-
-  //                 // Store the CSRF token in localStorage
-  //                 localStorage.setItem('csrfToken', csrfToken);
-
-  //                 // Set a timeout to remove the token after 5 hours
-  //                 setTimeout(() => {
-  //                     localStorage.removeItem('csrfToken');
-  //                 }, 5 * 60 * 60 * 1000); // 5 hours in milliseconds
-  //             })
-  //         .catch(error => {
-  //             console.error('Error fetching CSRF token:', error);
-  //         });
-  // } else {
-  //     console.log(`the token exist already: ${storedToken}`);
-  // }
-
+}, []);
 
   const [isHowItWorksExpanded, setIsHowItWorksExpanded] = useState(true);
   const [isJoinCommunityExpanded, setIsJoinCommunityExpanded] = useState(false);

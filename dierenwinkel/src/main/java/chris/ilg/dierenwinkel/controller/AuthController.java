@@ -9,6 +9,7 @@ import chris.ilg.dierenwinkel.service.UserDto;
 import chris.ilg.dierenwinkel.service.UserServiceImpl;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -64,6 +65,8 @@ public class AuthController {
 //
 //            // Set user in session (optional, adjust based on your session management)
 //            /*session.setAttribute("user", userDetailsService.loadUserByUsername(loginRequest.getMail()));*/
+//                HttpHeaders headers = new HttpHeaders();
+//                headers.add("userID",String.valueOf(userDetails.getId()));
                 return ResponseEntity.ok("Login successful");
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");

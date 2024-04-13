@@ -30,7 +30,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("Username not found");
         }
-        return new CustomUserDetails(user.getMail(), user.getPassword(), authorities());
+        return new CustomUserDetails(user.getId(), user.getMail(), user.getPassword(), authorities());
     }
 
     public Collection<? extends GrantedAuthority> authorities() {

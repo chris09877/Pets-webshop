@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 
 @RestController
@@ -19,7 +18,7 @@ public class OrderController {
     private OrderServiceImpl orderService;
     private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
-    @PostMapping("/add")
+    @PostMapping("/create")
     public String add(@RequestBody OrdersDto ordersDto){
         logger.info("Received new order A ZBEEEEEE: {}", ordersDto);
         Orders order = new Orders(ordersDto);
@@ -53,16 +52,28 @@ public class OrderController {
 
     }
 
-    @PatchMapping("")
-    public Orders updateOrder(@RequestParam String userInfo, @RequestBody Orders updatedOrder) {
-        logger.info("Updating the order with user info: " + userInfo);
-        return orderService.updateOrder(userInfo, updatedOrder);
+    @PatchMapping("/update")
+    public Orders updateOrder(@RequestParam Integer userId, @RequestBody OrdersDto updatedOrderDto) {
+        logger.info("Updating the order with user ID: " + userId);
+        return orderService.updateOrder(userId, updatedOrderDto);
     }
 
     @GetMapping("/find")
-    public ResponseEntity<Orders> getOrderByUserInfo(@RequestParam String userInfo) {
-        logger.info("Getting the order with user info: " + userInfo);
-        Orders order = orderService.getOrderByUserInfo(userInfo);
+    public ResponseEntity<Orders> getOrderByUserId(@RequestParam Integer userId) {
+        logger.info("Getting the order with user id: " + userId);
+        Orders order = orderService.getOrderByUserId(userId);
+        if (order != null ){
+            return ResponseEntity.ok(order);
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @GetMapping("/exist")
+    public ResponseEntity<Orders> getOrderByUserInfo(@RequestParam String sessionId) {
+        logger.info("Getting the order with session id: " + sessionId);
+        Orders order = orderService.getOrderByUserInfo(sessionId);
         if (order != null ){
             return ResponseEntity.ok(order);
         }
@@ -78,4 +89,5 @@ public class OrderController {
         return ResponseEntity.ok("Order with ID " + orderId + " deleted successfully.");
 
     }
+
 }

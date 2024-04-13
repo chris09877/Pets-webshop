@@ -96,4 +96,9 @@ public class OrderServiceImpl implements OrderService{
         return orders;
     }
 
+    @Override
+    public Orders getOrderByUserInfo(String sessionId) {
+        Orders order = orderRepo.findByUserInfo(sessionId);
+        return order;
+    }
 }

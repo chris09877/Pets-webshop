@@ -1,12 +1,17 @@
 import React from 'react';
-//import { useAuth } from './AuthContext';
+import axios from 'axios';
 
 const LogoutBtn = () => {
   //const { logout } = useAuth();
 
-  const handleLogout = () => {
-   // logout();
-    window.location = '/';
+  const handleLogout = async () => {
+    try {
+      const response = await axios.post('http://localhost:8080/login?logout');
+      console.log('Logout successful:', response.data);
+      window.location.href = 'http://localhost:5713/';
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }    window.location = '/';
 
   };
 
