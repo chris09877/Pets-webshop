@@ -3,7 +3,13 @@ package chris.ilg.dierenwinkel.config;
 import chris.ilg.dierenwinkel.Security.CustomSessionAuthentication;
 import chris.ilg.dierenwinkel.Security.CustomUserDetails;
 import chris.ilg.dierenwinkel.Security.CustomUserDetailsService;
+import chris.ilg.dierenwinkel.controller.OrderController;
 import chris.ilg.dierenwinkel.repository.UserRepo;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.boot.autoconfigure.security.reactive.PathRequest;
@@ -19,22 +25,29 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig   {
+    private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
 
     @Autowired
@@ -45,30 +58,29 @@ public class SecurityConfig   {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf((csrf) -> csrf
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 
-                        .ignoringRequestMatchers("/register")
-                        //.ignoringRequestMatchers("/api/user/add")
-                        .ignoringRequestMatchers("/login")
-                        .ignoringRequestMatchers("/api/product/all")
-                        .ignoringRequestMatchers("/api/product/filter/{category}")
-                        .ignoringRequestMatchers("/api/product/{id}")
-
-                )
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowedOrigins(Collections.singletonList("http://localhost:5173/")); // Replace with your frontend origin
                     config.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "PATCH", "DELETE"));
-                    config.setAllowedHeaders(Arrays.asList("Content-Type","User-Id","Set-Cookie", "POST")); // Adjust as needed
+                    config.setAllowedHeaders(Arrays.asList("Content-Type", "POST")); // Adjust as needed
                     config.setAllowCredentials(true);
                     return config;}))
-                .csrf((csrf) -> csrf
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 
-                        .ignoringRequestMatchers("http://localhost:8080/register")
-                )
-        ;
+                .csrf((csrf) -> csrf
+                                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+
+//                        .sessionAuthenticationStrategy(new CustomSessionAuthentication())
+                                .ignoringRequestMatchers("/register")
+                                //.ignoringRequestMatchers("/api/user/add")
+                                .requireCsrfProtectionMatcher(new AntPathRequestMatcher("/starfoulah"))
+                                //.ignoringRequestMatchers("/login")
+                                .ignoringRequestMatchers("/api/product/all")
+                                .ignoringRequestMatchers("/api/product/filter/{category}")
+                                .ignoringRequestMatchers("/api/product/{id}")
+
+
+                );
 
         return http.build();
     }
@@ -82,8 +94,9 @@ public class SecurityConfig   {
 
                 ).formLogin(
                         form -> form
-                                .loginPage("/login")
-                                .loginProcessingUrl("/login")
+                                .loginPage("/login").permitAll()
+                                .loginProcessingUrl("/login").permitAll()
+                                //.successHandler(successHandler()) // Custom success handler to include CSRF token in the response
                                 .defaultSuccessUrl("http://localhost:5713/catalog")
                                 .permitAll()
                 ).logout(
@@ -119,6 +132,28 @@ public class SecurityConfig   {
         provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder);
         return new ProviderManager(Arrays.asList(provider));
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler successHandler() {
+        return new AuthenticationSuccessHandler() {
+            @Override
+            public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+                // Add CSRF token to the response after successful login
+                CsrfToken csrfToken = new HttpSessionCsrfTokenRepository().generateToken(request);
+                logger.info(csrfToken.getToken());
+                response.setHeader("X-CSRF-TOKEN", csrfToken.getToken());
+
+                // Continue with the default success URL redirection
+                // new DefaultRedirectStrategy().sendRedirect(request, response, "/dashboard");
+            }
+        };
+
+    }
+
+    @Bean
+    public HttpSessionCsrfTokenRepository csrfTokenRepository() {
+        return new HttpSessionCsrfTokenRepository(); // Create the CSRF token repository bean
     }
 
 }

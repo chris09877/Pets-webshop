@@ -7,8 +7,13 @@ import chris.ilg.dierenwinkel.model.User;
 import chris.ilg.dierenwinkel.service.LoginRequest;
 import chris.ilg.dierenwinkel.service.UserDto;
 import chris.ilg.dierenwinkel.service.UserServiceImpl;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,19 +25,27 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
 public class AuthController {
 
     private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
-
+    @Autowired
+    private  HttpSessionCsrfTokenRepository csrfTokenRepository;
 
     @Autowired
     private UserServiceImpl userServiceImpl;
@@ -48,6 +61,10 @@ public class AuthController {
     @Autowired
     private HttpSession session;
 
+    @Autowired
+    private HttpServletRequest request;
+
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
 
@@ -58,16 +75,20 @@ public class AuthController {
 
             // Compare entered password with hashed password
             if (passwordEncoder.matches(loginRequest.getPwd(), userDetails.getPassword())) {
-                //
+
                 logger.info(loginRequest.getPwd() + " userdetails: " + userDetails.getPassword());
-                // Set the authenticated user in the SecurityContext
-//            SecurityContextHolder.getContext().setAuthentication(authentication);
-//
-//            // Set user in session (optional, adjust based on your session management)
-//            /*session.setAttribute("user", userDetailsService.loadUserByUsername(loginRequest.getMail()));*/
-//                HttpHeaders headers = new HttpHeaders();
-//                headers.add("userID",String.valueOf(userDetails.getId()));
-                return ResponseEntity.ok("Login successful");
+
+                CsrfToken csrfToken = csrfTokenRepository.generateToken(request);
+                session.setAttribute("csrfToken", csrfToken.getToken());
+                session.setAttribute("userId", userDetails.getId());
+                session.setAttribute("user", userDetailsService.loadUserByUsername(loginRequest.getMail()));
+                logger.info("csrf token:"+csrfToken.getToken());
+                logger.info("user id :"+ userDetails.getId());
+
+                Map<String, Object> responseBody = new HashMap<>();
+                responseBody.put("csrfToken", csrfToken.getToken());
+                responseBody.put("loginSuccess", true); // Indicate successful login
+                return ResponseEntity.ok(responseBody);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
             }
@@ -95,5 +116,8 @@ public class AuthController {
 //
 //        return "redirect:/login"; // Redirect to login page after logout
 //    }
+
+
+
 
 }
