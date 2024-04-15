@@ -49,6 +49,7 @@ public class SecurityConfig   {
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 
                         .ignoringRequestMatchers("/register")
+                        //.ignoringRequestMatchers("/api/user/add")
                         .ignoringRequestMatchers("/login")
                         .ignoringRequestMatchers("/api/product/all")
                         .ignoringRequestMatchers("/api/product/filter/{category}")
