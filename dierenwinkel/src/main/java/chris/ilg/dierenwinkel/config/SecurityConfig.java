@@ -1,13 +1,12 @@
 package chris.ilg.dierenwinkel.config;
 
-import chris.ilg.dierenwinkel.Security.CustomSessionAuthentication;
-import chris.ilg.dierenwinkel.Security.CustomUserDetails;
-import chris.ilg.dierenwinkel.Security.CustomUserDetailsService;
+import chris.ilg.dierenwinkel.Security.*;
 import chris.ilg.dierenwinkel.controller.OrderController;
 import chris.ilg.dierenwinkel.repository.UserRepo;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +31,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.csrf.CsrfToken;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.*;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -64,23 +62,32 @@ public class SecurityConfig   {
                     config.setAllowedOrigins(Collections.singletonList("http://localhost:5173/")); // Replace with your frontend origin
                     config.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "PATCH", "DELETE"));
                     config.setAllowedHeaders(Arrays.asList("Content-Type", "POST")); // Adjust as needed
+                    config.setAllowedHeaders(Arrays.asList("Content-Type", "X-CSRF-TOKEN-jj"));
+                    config.setExposedHeaders(Arrays.asList("X-CSRF-TOKEN-jj"));
                     config.setAllowCredentials(true);
                     return config;}))
 
+                // .addFilter(new CustomCsrfFilter())
                 .csrf((csrf) -> csrf
-                                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 
-//                        .sessionAuthenticationStrategy(new CustomSessionAuthentication())
+                                //.disable()
+                               .csrfTokenRepository(csrfTokenRepository())
+                               //.csrfTokenRepository(cookieCsrfTokenRepository())  // Ensure CSRF is enabled and configured
+                             // .csrfTokenRepository(new CustomHttpSessionCsrfTokenRepository())  // Ensure CSRF is enabled and configured
+////                        .sessionAuthenticationStrategy(new CustomSessionAuthentication())
                                 .ignoringRequestMatchers("/register")
-                                //.ignoringRequestMatchers("/api/user/add")
-                                .requireCsrfProtectionMatcher(new AntPathRequestMatcher("/starfoulah"))
-                                //.ignoringRequestMatchers("/login")
+//                                //.ignoringRequestMatchers("/api/user/add")
+//                               // .requireCsrfProtectionMatcher(new AntPathRequestMatcher("/starfoulah"))
+//                                //.requireCsrfProtectionMatcher(new AntPathRequestMatcher("/api/user"))
+                                .ignoringRequestMatchers("/login")
                                 .ignoringRequestMatchers("/api/product/all")
                                 .ignoringRequestMatchers("/api/product/filter/{category}")
                                 .ignoringRequestMatchers("/api/product/{id}")
 
 
-                );
+                )
+                //.addFilterBefore(new CustomCsrfFilter(), UsernamePasswordAuthenticationFilter.class) // Example: Placing before UsernamePasswordAuthenticationFilter
+        ;
 
         return http.build();
     }
@@ -96,7 +103,7 @@ public class SecurityConfig   {
                         form -> form
                                 .loginPage("/login").permitAll()
                                 .loginProcessingUrl("/login").permitAll()
-                                //.successHandler(successHandler()) // Custom success handler to include CSRF token in the response
+                                .successHandler(successfulLoginHandler()) // Custom success handler to include CSRF token in the response
                                 .defaultSuccessUrl("http://localhost:5713/catalog")
                                 .permitAll()
                 ).logout(
@@ -134,26 +141,34 @@ public class SecurityConfig   {
         return new ProviderManager(Arrays.asList(provider));
     }
 
+
+
     @Bean
-    public AuthenticationSuccessHandler successHandler() {
-        return new AuthenticationSuccessHandler() {
-            @Override
-            public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-                // Add CSRF token to the response after successful login
-                CsrfToken csrfToken = new HttpSessionCsrfTokenRepository().generateToken(request);
-                logger.info(csrfToken.getToken());
-                response.setHeader("X-CSRF-TOKEN", csrfToken.getToken());
-
-                // Continue with the default success URL redirection
-                // new DefaultRedirectStrategy().sendRedirect(request, response, "/dashboard");
-            }
-        };
-
+    public CustomCsrfFilter customCsrfFilter() {
+        return new CustomCsrfFilter();
     }
 
     @Bean
-    public HttpSessionCsrfTokenRepository csrfTokenRepository() {
-        return new HttpSessionCsrfTokenRepository(); // Create the CSRF token repository bean
+    public CsrfTokenRepository csrfTokenRepository() {
+        HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
+        repository.setHeaderName("X-CSRF-TOKEN");  // Customize the header name if needed
+        return repository;
+    }
+
+
+    @Bean
+    public AuthenticationSuccessHandler successfulLoginHandler() {
+        return (request, response, authentication) -> {
+            CsrfTokenRepository csrfRepo = csrfTokenRepository();  // Use directly
+            CsrfToken csrfToken = csrfRepo.loadToken(request);
+            if (csrfToken == null) {
+                csrfToken = csrfRepo.generateToken(request);
+                csrfRepo.saveToken(csrfToken, request, response);
+            }
+            logger.info("CSRF Token on successful login: " + csrfToken.getToken());
+            response.setHeader("X-CSRF-TOKEN-jj", csrfToken.getToken());  // Set the CSRF token in the response header
+            // Additional response handling...
+        };
     }
 
 }
