@@ -15,15 +15,14 @@ const FormLogin = () => {
       const response = await axios.post('http://localhost:8080/login', credentials, {
         withCredentials: true
       });
-      console.log('Login successful:', response.data);
+      let data = await response.data;
+      let headers = await response.headers;
+      console.log('Login successful:', data);
       const cookies = response.headers['set-cookie'];
       // const cookies = document.cookie;
-      console.log(response.headers.get('set-cookie'));
-      console.log(response.headers.get('Set-Cookie'));
-      console.log(response.headers.get('Set-Cookies'));
-
-      console.log(response.headers);
-      console.log(response);
+      console.log("Headers: " + headers);
+      //console.log("header set cookie: " + data.headers.get('Set-Cookie'));
+      console.log("cookie :" + document.cookie);
 
       if (cookies) {
         const xsrfToken = cookies.find(cookie => cookie.startsWith('xsrf-token='));

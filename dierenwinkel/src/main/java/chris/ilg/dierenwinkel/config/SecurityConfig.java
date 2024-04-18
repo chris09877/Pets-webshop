@@ -62,32 +62,12 @@ public class SecurityConfig   {
                     config.setAllowedOrigins(Collections.singletonList("http://localhost:5173/")); // Replace with your frontend origin
                     config.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "PATCH", "DELETE"));
                     config.setAllowedHeaders(Arrays.asList("Content-Type", "POST")); // Adjust as needed
-                    config.setAllowedHeaders(Arrays.asList("Content-Type", "X-CSRF-TOKEN-jj"));
-                    config.setExposedHeaders(Arrays.asList("X-CSRF-TOKEN-jj"));
+                    config.addExposedHeader("Set-Cookie");
+                    config.setExposedHeaders(Arrays.asList("Set-Cookie", "Session-ID"));
                     config.setAllowCredentials(true);
                     return config;}))
 
-                // .addFilter(new CustomCsrfFilter())
-                .csrf((csrf) -> csrf
-
-                                //.disable()
-                               .csrfTokenRepository(csrfTokenRepository())
-                               //.csrfTokenRepository(cookieCsrfTokenRepository())  // Ensure CSRF is enabled and configured
-                             // .csrfTokenRepository(new CustomHttpSessionCsrfTokenRepository())  // Ensure CSRF is enabled and configured
-////                        .sessionAuthenticationStrategy(new CustomSessionAuthentication())
-                                .ignoringRequestMatchers("/register")
-//                                //.ignoringRequestMatchers("/api/user/add")
-//                               // .requireCsrfProtectionMatcher(new AntPathRequestMatcher("/starfoulah"))
-//                                //.requireCsrfProtectionMatcher(new AntPathRequestMatcher("/api/user"))
-                                .ignoringRequestMatchers("/login")
-                                .ignoringRequestMatchers("/api/product/all")
-                                .ignoringRequestMatchers("/api/product/filter/{category}")
-                                .ignoringRequestMatchers("/api/product/{id}")
-
-
-                )
-                //.addFilterBefore(new CustomCsrfFilter(), UsernamePasswordAuthenticationFilter.class) // Example: Placing before UsernamePasswordAuthenticationFilter
-        ;
+                .csrf((csrf) -> csrf.disable());
 
         return http.build();
     }
@@ -103,8 +83,8 @@ public class SecurityConfig   {
                         form -> form
                                 .loginPage("/login").permitAll()
                                 .loginProcessingUrl("/login").permitAll()
-                                .successHandler(successfulLoginHandler()) // Custom success handler to include CSRF token in the response
-                                .defaultSuccessUrl("http://localhost:5713/catalog")
+                                //.defaultSuccessUrl("http://localhost:5713/catalog")
+                                .successHandler(successfulLoginHandler())
                                 .permitAll()
                 ).logout(
                         logout -> logout
@@ -141,33 +121,24 @@ public class SecurityConfig   {
         return new ProviderManager(Arrays.asList(provider));
     }
 
-
-
-    @Bean
-    public CustomCsrfFilter customCsrfFilter() {
-        return new CustomCsrfFilter();
-    }
-
-    @Bean
-    public CsrfTokenRepository csrfTokenRepository() {
-        HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
-        repository.setHeaderName("X-CSRF-TOKEN");  // Customize the header name if needed
-        return repository;
-    }
-
-
     @Bean
     public AuthenticationSuccessHandler successfulLoginHandler() {
-        return (request, response, authentication) -> {
-            CsrfTokenRepository csrfRepo = csrfTokenRepository();  // Use directly
-            CsrfToken csrfToken = csrfRepo.loadToken(request);
-            if (csrfToken == null) {
-                csrfToken = csrfRepo.generateToken(request);
-                csrfRepo.saveToken(csrfToken, request, response);
+        return new AuthenticationSuccessHandler() {
+            @Override
+            public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+                // Ensure a session is created (if not already present)
+                HttpSession session = request.getSession(true);
+
+                // Set the session ID in the response header
+                response.setHeader("Session-ID", session.getId());
+
+                // Log for debugging
+                logger.info("Session ID on successful login: " + session.getId());
+
+                // You can optionally add a redirect or additional logic here
+                response.setStatus(HttpServletResponse.SC_OK);
+                // response.sendRedirect("/home"); // Modify as necessary if you want a redirect after login
             }
-            logger.info("CSRF Token on successful login: " + csrfToken.getToken());
-            response.setHeader("X-CSRF-TOKEN-jj", csrfToken.getToken());  // Set the CSRF token in the response header
-            // Additional response handling...
         };
     }
 
