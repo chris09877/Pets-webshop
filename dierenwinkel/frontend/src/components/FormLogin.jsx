@@ -13,10 +13,16 @@ const FormLogin = () => {
   const handleLogin = async () => {
     try {
       const response = await axios.post('http://localhost:8080/login', credentials, {
+        // headers: {Cookie: "JESSIONID=" + Cookies.get("session_id")},
         withCredentials: true
       });
       let data = await response.data;
       let headers = await response.headers;
+      console.log(`response:header${response.headers}`);
+      console.log("SET COOKIE: " + headers['Set-Cookie']);
+      console.log("COOKIE: " + headers.get('Cookie'));
+
+console.log(document.cookie);
       console.log('Login successful:', data);
       console.log("SESSION ID: " + headers.get('session-id'));
       console.log("USER ID: " + headers.get('User-ID'));

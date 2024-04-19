@@ -243,7 +243,11 @@ const Catalog = () => {
         // Simulate checking for an existing order
         const response = await axios.get(`http://localhost:8080/orders/exist`, {
             params: { sessionId: sessionId },
-            headers: {"Content-Type" : 'application/json;charset=UTF-8'},
+            headers: {
+                "Content-Type": "application/json;charset=UTF-8",
+                "Cookie": "JESSIONID=" + Cookies.get("session_id")
+        
+        },
             withCredentials: true
         });
 
@@ -251,19 +255,23 @@ const Catalog = () => {
             const patchResponse = await axios.patch(`http://localhost:8080/orders/update`, {
                 products: productsArray, // Send as array
                 withCredentials: true,
-                headers: {"Content-Type" : 'application/json;charset=UTF-8'},
-
+                headers: {Cookie: "JESSIONID=" + Cookies.get("session_id")},
             });
             console.log('Patch successful:', patchResponse.data);
         }
     } catch (error) {
         const sessionId = Cookies.get('session_id');
+        console.log(Cookies.get('session_id'));
 
         if (error.response && error.response.status === 404) {
             const currentDate = new Date();
             const formattedDate = currentDate.toISOString().split('T')[0];
             const anotherResponse = await axios.post(`http://localhost:8080/orders/create`, {
-                headers: {"Content-Type" : 'application/json;charset=UTF-8'},
+                headers: {
+                    "Content-Type": "application/json;charset=UTF-8",
+                    "Cookie": "JESSIONID=" + Cookies.get("session_id")
+                },
+
                 userId: Cookies.get('userId'), // Ensure 'userId' is correctly defined or fetched
                 products: productsArray.map((product) => ({
                     id: product.id,

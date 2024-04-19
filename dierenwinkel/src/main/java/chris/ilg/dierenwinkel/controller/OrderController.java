@@ -25,25 +25,46 @@ public class OrderController {
     private OrderServiceImpl orderService;
     private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
-@PostMapping(value = "/create", consumes = "application/json")
+@PostMapping( "/create")
 public ResponseEntity<?> add(@RequestBody OrdersDto ordersDto, HttpServletRequest request) {
-    HttpSession session = request.getSession(false); // Get existing session if it exists
+    HttpSession session = request.getSession(true); // Get existing session if it exists
     if (session == null) {
-        logger.info("No session found, user is not authenticated.");
+        //logger.info("No session found, user is not authenticated. Session id:" + session.getId());
         return new ResponseEntity<>("User is not authenticated", HttpStatus.UNAUTHORIZED);
     }
 
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (authentication == null || /*authentication instanceof AnonymousAuthenticationToken ||*/ !authentication.isAuthenticated()) {
-        logger.info("User is not properly authenticated, session ID: {}", session.getId());
+        logger.info("User is not properly authenticated, session ID is null");
         return new ResponseEntity<>("User is not authenticated", HttpStatus.UNAUTHORIZED);
     }
 
-    logger.info("Session ID: {}", session.getId());
+    logger.info("Session ID: {}", request.getSession().getId());
     logger.info("Received new order dto A ZBEEEEEE: {}", ordersDto);
     orderService.saveOrder(ordersDto);
     return ResponseEntity.ok("New order is added");
 }
+//@PostMapping("/create")
+//public ResponseEntity<?> add(@RequestBody OrdersDto ordersDto, HttpServletRequest request) {
+//    HttpSession session = request.getSession(false);
+//    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//    logger.info("Session check - Exists: {}, ID: {}", session != null, session != null ? session.getId() : "N/A");
+//    logger.info("Authentication check - Exists: {}, Authenticated: {}", authentication != null, authentication != null && authentication.isAuthenticated());
+//    logger.info("User details: {}", authentication != null ? authentication.getName() : "N/A");
+//
+//    //if (session == null || authentication == null || !authentication.isAuthenticated()) {
+//      if (authentication == null || /*authentication instanceof AnonymousAuthenticationToken ||*/ !authentication.isAuthenticated()) {
+//
+//    return new ResponseEntity<>("User is not authenticated", HttpStatus.UNAUTHORIZED);
+//    }
+//
+//    logger.info("Session ID: {}", session.getId());
+//    logger.info("Received new order dto: {}", ordersDto);
+//    orderService.saveOrder(ordersDto);
+//    return ResponseEntity.ok("New order is added");
+//}
+
 
 
 

@@ -87,6 +87,7 @@ public class SecurityConfig   {
                                 //.defaultSuccessUrl("http://localhost:5713/catalog")
                                 .successHandler(successfulLoginHandler())
                                 .permitAll()
+
                 ).logout(
                         logout -> logout
                                 .logoutRequestMatcher(new AntPathRequestMatcher("/login?logout"))
