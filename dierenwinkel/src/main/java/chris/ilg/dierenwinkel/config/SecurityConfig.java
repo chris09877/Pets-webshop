@@ -61,7 +61,7 @@ public class SecurityConfig   {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowedOrigins(Collections.singletonList("http://localhost:5173/")); // Replace with your frontend origin
                     config.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "PATCH", "DELETE"));
-                    config.setAllowedHeaders(Arrays.asList("Content-Type", "POST")); // Adjust as needed
+                    config.setAllowedHeaders(Arrays.asList("Content-Type", "POST","Authorization")); // Adjust as needed
                     config.addExposedHeader("Set-Cookie");
                     config.setExposedHeaders(Arrays.asList("Set-Cookie", "Session-ID"));
                     config.setAllowCredentials(true);

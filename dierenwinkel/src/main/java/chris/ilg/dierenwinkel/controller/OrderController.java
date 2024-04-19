@@ -4,6 +4,7 @@ import chris.ilg.dierenwinkel.model.Orders;
 import chris.ilg.dierenwinkel.service.OrderServiceImpl;
 import chris.ilg.dierenwinkel.service.OrdersDto;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,19 +30,40 @@ public class OrderController {
 //        orderService.saveOrder(ordersDto);
 //        return "New order is added";
 //    }
+//@PostMapping("/create")
+//public ResponseEntity<?> add(@RequestBody OrdersDto ordersDto, HttpServletRequest request) {
+//    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//    if (authentication == null || authentication instanceof AnonymousAuthenticationToken || !authentication.isAuthenticated()) {
+//        logger.info("Session ID: {}", request.getSession(false).getId());
+//        return new ResponseEntity<>("User is not authenticated", HttpStatus.UNAUTHORIZED);
+//    }
+//
+//
+//    logger.info("Received new order dto  A ZBEEEEEE: {}", ordersDto);
+//    //Orders order = new Orders(ordersDto);
+//    orderService.saveOrder(ordersDto);
+//    return ResponseEntity.ok("New order is added");
+//}
 @PostMapping("/create")
 public ResponseEntity<?> add(@RequestBody OrdersDto ordersDto, HttpServletRequest request) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    if (authentication == null || authentication instanceof AnonymousAuthenticationToken || !authentication.isAuthenticated()) {
+    HttpSession session = request.getSession(false); // Get existing session if it exists
+    if (session == null) {
+        logger.info("No session found, user is not authenticated.");
         return new ResponseEntity<>("User is not authenticated", HttpStatus.UNAUTHORIZED);
     }
 
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication == null || /*authentication instanceof AnonymousAuthenticationToken ||*/ !authentication.isAuthenticated()) {
+        logger.info("User is not properly authenticated, session ID: {}", session.getId());
+        return new ResponseEntity<>("User is not authenticated", HttpStatus.UNAUTHORIZED);
+    }
 
-    logger.info("Received new order dto  A ZBEEEEEE: {}", ordersDto);
-    //Orders order = new Orders(ordersDto);
+    logger.info("Session ID: {}", session.getId());
+    logger.info("Received new order dto A ZBEEEEEE: {}", ordersDto);
     orderService.saveOrder(ordersDto);
     return ResponseEntity.ok("New order is added");
 }
+
 
 
     @GetMapping("/{id}")

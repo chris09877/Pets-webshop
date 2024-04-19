@@ -99,8 +99,9 @@ public class AuthController {
                 try {
                     // Use autowired success handler
                     successHandler.onAuthenticationSuccess(request, response, authenticated);
-                }catch(ServletException e){
-
+                }catch (ServletException e) {
+                    logger.error("Error during post-authentication: {}", e.getMessage(), e);
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Login processing error");
                 }
                 // Assuming you want to return a simple success message
                 return ResponseEntity.ok("Login successful");
