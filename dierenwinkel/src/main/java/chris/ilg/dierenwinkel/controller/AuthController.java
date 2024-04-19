@@ -27,6 +27,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
@@ -65,30 +66,55 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request,HttpServletResponse response) {
 
+//        try {
+//            CustomUserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getMail());
+//            if (passwordEncoder.matches(loginRequest.getPwd(), userDetails.getPassword())) {
+//                Authentication authentication = new UsernamePasswordAuthenticationToken(loginRequest.getMail(), loginRequest.getPwd(), userDetails.getAuthorities());
+//                Authentication authenticated = authenticationManager.authenticate(authentication);
+//                SecurityContextHolder.getContext().setAuthentication(authenticated);
+//
+//                try {
+//                    // Use autowired success handler
+//                    successHandler.onAuthenticationSuccess(request, response, authenticated);
+//                }catch (ServletException e) {
+//                    logger.error("Error during post-authentication: {}", e.getMessage(), e);
+//                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Login processing error");
+//                }
+//                int userId = userDetails.getId(); // Assuming getId() is implemented to return user ID
+//                response.setHeader("User-ID", String.valueOf(userId));
+//                return ResponseEntity.ok("Login successful");
+//            } else {
+//                logger.info("Password does not match");
+//                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Password mismatch");
+//            }
+//        } catch (AuthenticationException | IOException e) {
+//            logger.error("Authentication failed", e);
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed");
+//        }
         try {
-            CustomUserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getMail());
-            if (passwordEncoder.matches(loginRequest.getPwd(), userDetails.getPassword())) {
-                Authentication authentication = new UsernamePasswordAuthenticationToken(loginRequest.getMail(), loginRequest.getPwd(), userDetails.getAuthorities());
-                Authentication authenticated = authenticationManager.authenticate(authentication);
-                SecurityContextHolder.getContext().setAuthentication(authenticated);
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                    loginRequest.getMail(), loginRequest.getPwd());
 
-                try {
-                    // Use autowired success handler
-                    successHandler.onAuthenticationSuccess(request, response, authenticated);
-                }catch (ServletException e) {
-                    logger.error("Error during post-authentication: {}", e.getMessage(), e);
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Login processing error");
-                }
+            // Authenticate the user
+            Authentication authentication = authenticationManager.authenticate(authToken);
+
+            // Check if authentication was successful
+            if (authentication.isAuthenticated()) {
+                SecurityContextHolder.getContext().setAuthentication(authentication);  // Update SecurityContextHolder
+
+                // Redirect or return successful response
+                HttpSession session = request.getSession(true);
+                session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
+            CustomUserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getMail());
                 int userId = userDetails.getId(); // Assuming getId() is implemented to return user ID
                 response.setHeader("User-ID", String.valueOf(userId));
-                return ResponseEntity.ok("Login successful");
+                response.setHeader("session-id",session.getId());
+                return ResponseEntity.ok().body("Authenticated successfully");
             } else {
-                logger.info("Password does not match");
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Password mismatch");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed");
             }
-        } catch (AuthenticationException | IOException e) {
-            logger.error("Authentication failed", e);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed");
+        } catch (AuthenticationException ex) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication error");
         }
     }
 
