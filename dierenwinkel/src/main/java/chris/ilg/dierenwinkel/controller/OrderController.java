@@ -95,9 +95,9 @@ public ResponseEntity<?> add(@RequestBody OrdersDto ordersDto, HttpServletReques
     }
 
     @PatchMapping("/update")
-    public Orders updateOrder(@RequestParam Integer userId, @RequestBody OrdersDto updatedOrderDto) {
-        logger.info("Updating the order with user ID: " + userId);
-        return orderService.updateOrder(userId, updatedOrderDto);
+    public Orders updateOrder(HttpServletRequest request, @RequestParam String userInfo, @RequestBody OrdersDto updatedOrderDto) {
+        logger.info("Updating the order with session ID: " + userInfo);
+        return orderService.updateOrder(userInfo, updatedOrderDto);
     }
 
 //    @GetMapping("/find")

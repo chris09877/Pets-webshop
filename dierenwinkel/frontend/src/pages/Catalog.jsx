@@ -244,20 +244,30 @@ const Catalog = () => {
         const response = await axios.get(`http://localhost:8080/orders/exist`, {
             params: { sessionId: sessionId },
             headers: {
-                "Content-Type": "application/json;charset=UTF-8",
-                "Cookie": "JESSIONID=" + Cookies.get("session_id")
-        
+                "Content-Type": "application/json;charset=UTF-8"        
         },
             withCredentials: true
         });
 
         if (response.status === 200) {
-            const patchResponse = await axios.patch(`http://localhost:8080/orders/update`, {
-                products: productsArray, // Send as array
-                withCredentials: true,
-                headers: {Cookie: "JESSIONID=" + Cookies.get("session_id")},
-            });
-            console.log('Patch successful:', patchResponse.data);
+           // Assuming Cookies.get('session_id') retrieves the current session ID stored in cookies
+const sessionId = Cookies.get('session_id');
+console.log(sessionId);
+const patchResponse = await axios.patch(`http://localhost:8080/orders/update`, {
+    products: productsArray.map(product => ({
+        id: product.id,
+        price: product.price,
+        description: product.description,
+        quantity: product.quantity,
+        name: product.name,
+        categories: product.categories
+    }))
+}, {
+    params:{ userInfo: sessionId},
+    withCredentials: true // Ensure cookies are sent with the request for sessions
+});
+console.log('Patch successful:', patchResponse.data);
+
         }
     } catch (error) {
         const sessionId = Cookies.get('session_id');
@@ -267,11 +277,7 @@ const Catalog = () => {
             const currentDate = new Date();
             const formattedDate = currentDate.toISOString().split('T')[0];
             const anotherResponse = await axios.post(`http://localhost:8080/orders/create`, {
-                headers: {
-                    "Content-Type": "application/json;charset=UTF-8",
-                    "Cookie": "JESSIONID=" + Cookies.get("session_id")
-                },
-
+                headers: {"Content-Type": "application/json;charset=UTF-8"},
                 userId: Cookies.get('userId'), // Ensure 'userId' is correctly defined or fetched
                 products: productsArray.map((product) => ({
                     id: product.id,

@@ -55,21 +55,20 @@ private UserServiceImpl userServiceImpl;
 
     @Override
     @Transactional
-    public Orders updateOrder(Integer userId, OrdersDto updatedOrderDto) {
-        Orders existingOrder = orderRepo.findByUserId(userId);
+    public Orders updateOrder(String userInfo, OrdersDto updatedOrderDto) {
+
+        Orders existingOrder = orderRepo.findByUserInfo(userInfo);
 
         if (existingOrder != null) {
             // Update the necessary fields
-            existingOrder.setDate(updatedOrderDto.getDate());
-            existingOrder.setContent(updatedOrderDto.getContent());
-            existingOrder.setUserInfo(updatedOrderDto.getUserInfo());
+            existingOrder.getProducts().addAll(updatedOrderDto.getProducts());
             // existingOrder.setUser(updatedOrderDto.getUser());//pas très sur que ca va marcher
 
 
             return orderRepo.save(existingOrder);
         }
         else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found for userInfo: " + userId);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found for userInfo: " + userInfo);
         }
     }
 
