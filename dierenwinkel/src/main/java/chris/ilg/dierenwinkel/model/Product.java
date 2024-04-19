@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Product {
@@ -14,8 +16,10 @@ public class Product {
     private int id;
 
     @ManyToMany(mappedBy = "products")
-    @JsonBackReference
-    private List<Orders> orders = new ArrayList<Orders>();
+    //@JsonBackReference
+    //private List<Orders> orders = new ArrayList<Orders>();
+    private Set<Orders> orders = new HashSet<>();
+
     @Column(nullable = false, length = 255)
     private String name,description;
     @Column(nullable = false)
@@ -87,11 +91,11 @@ public class Product {
         this.categories = categories;
     }
 
-    public List<Orders> getOrders() {
+    public Set<Orders> getOrders() {
         return orders;
     }
 
-    public void setOrders(List<Orders> orders) {
+    public void setOrders(Set<Orders> orders) {
         this.orders = orders;
     }
 }

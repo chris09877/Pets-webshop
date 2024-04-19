@@ -12,7 +12,9 @@ import org.springframework.context.annotation.Bean;
 
 import java.util.ArrayList;
 import java.sql.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Orders {
@@ -45,7 +47,6 @@ public class Orders {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = true)
-    @JsonManagedReference
     private User user;
 
     @ManyToMany
@@ -53,7 +54,8 @@ public class Orders {
             name = "order_product",
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))
-    private List<Product> products = new ArrayList<Product>();
+   //@JsonManagedReference
+    private Set<Product> products = new HashSet<>();
     @Column(nullable = true)
     //@ElementCollection
     private String content;
@@ -105,11 +107,11 @@ public class Orders {
         this.user = user;
     }
 
-    public List<Product> getProducts() {
+    public Set<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
+    public void setProducts(Set<Product> products) {
         this.products = products;
     }
 
