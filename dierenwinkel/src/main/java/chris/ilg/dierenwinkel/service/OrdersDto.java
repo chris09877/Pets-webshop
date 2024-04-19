@@ -4,12 +4,13 @@ import chris.ilg.dierenwinkel.model.Product;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Set;
 
 public class OrdersDto {
 
     private int id;
     private int userId;
-    private List<Product> products;
+    private Set<Product> products;
     private String content;
     private Date date;
     private String userInfo;
@@ -32,11 +33,11 @@ public class OrdersDto {
         this.userId = userId;
     }
 
-    public List<Product> getProducts() {
+    public Set<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
+    public void setProducts(Set<Product> products) {
         this.products = products;
     }
 

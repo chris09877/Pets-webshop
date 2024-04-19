@@ -15,7 +15,7 @@ public interface OrderService {
     public void deleteOrder(int id);
     public List<Orders> getAllOrdersById(List<Integer> ids);
     public Orders getOrderByUserInfo(String sessionId);
-
+    public List<Orders> getAllOrdersByUserId(Integer id);
 
 
 }

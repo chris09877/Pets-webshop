@@ -67,6 +67,7 @@
 // export default OrderDetails;
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const OrderDetails = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -83,8 +84,12 @@ const OrderDetails = () => {
   };
 
   const getOrderDetails = async () => {
+    let user_id = Cookies.get("userId");
     try {
-      const response = await axios.get('http://localhost:8080/api/orders');
+      const response = await axios.get('http://localhost:8080/api/orders/find',{
+        params: {userId:user_id},
+        withCredentials:true
+      });
       setProducts(response.data);
     } catch (error) {
       console.error('Error fetching order details:', error);

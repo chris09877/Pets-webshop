@@ -146,7 +146,7 @@ import Cookies from 'js-cookie';
 const Catalog = () => {
     const [products, setProducts] = useState([]);
     const [showBtn, setShowBtn] = useState(true);
-    const [productData, setProductData] = useState([]);
+    const [productData, setProductData] = useState({});
 
     useEffect(() => {
         async function fetchProducts() {
@@ -169,29 +169,120 @@ const Catalog = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const response = await axios.get(`http://localhost:8080/orders/exist`);
+        // try {
+        //     const response = await axios.get(`http://localhost:8080/orders/exist`, {
+        //         params: { sessionId: Cookies.get('session_id') },
+        //         withCredentials: true 
+        //     });
+        //     console.log(response.status);
+        //     if (response.status === 200) {
+        //         const patchResponse = await axios.patch(`http://localhost:8080/orders/update`, {
+        //             "product": productData.values(),
+        //             withCredentials: true 
 
-            if (response.status === 200) {
-                const patchResponse = await axios.patch(`http://localhost:8080/orders/update`, {
-                    "product": productData.values()
-                });
-                console.log('Patch successful:', patchResponse.data);
-            } else if (response.status === 404) {
-                const currentDate = new Date();
-                const formattedDate = currentDate.toISOString().split('T')[0];
-                const anotherResponse = await axios.post(`http://localhost:8080/orders/create`, {
-                    "userId": Cookies.get(userId), // Replace with the actual user ID
-                    "products": productData.values(), // Replace with the actual product IDs
-                    "content": "",
-                    "date": formattedDate, // Replace with the actual date in yyyy-MM-dd format
-                    "userInfo": Cookies.get('session_id')
-                });
-                console.log('Handled 404, new data:', anotherResponse.data);
-            }
-        } catch (error) {
-            console.error('Error in initial request:', error);
+        //         });
+        //         console.log('Patch successful:', patchResponse.data);
+        //     } else if (response.status === 404) {
+        //         const currentDate = new Date();
+        //         const formattedDate = currentDate.toISOString().split('T')[0];
+        //         const anotherResponse = await axios.post(`http://localhost:8080/orders/create`, {
+        //             "userId": Cookies.get(userId), // Replace with the actual user ID
+        //             "products": productData.values(), // Replace with the actual product IDs
+        //             "content": "",
+        //             "date": formattedDate, // Replace with the actual date in yyyy-MM-dd format
+        //             "userInfo": Cookies.get('session_id'),
+        //             withCredentials: true 
+
+        //         });
+        //         console.log('Handled 404, new data:', anotherResponse.data);
+        //     }
+        // } catch (error) {
+        //     console.error('Error in initial request:', error);
+        // }
+        // try {
+        //     const response = await axios.get(`http://localhost:8080/orders/exist`, {
+        //         params: { sessionId: Cookies.get('session_id') },
+        //         withCredentials: true 
+        //     });
+        //     console.log(response.status);
+        //     if (response.status === 200) {
+        //         const patchResponse = await axios.patch(`http://localhost:8080/orders/update`, {
+        //             "product": productData.values(),
+        //             withCredentials: true 
+        //         });
+        //         console.log('Patch successful:', patchResponse.data);
+        //     }
+        // } catch (error) {
+        //     if (error.response && error.response.status === 404) {
+        //         console.log("inside if for 404 error");
+        //         console.log(`This is the product data: ${productData})}`);
+            
+        //         const currentDate = new Date();
+        //         const formattedDate = currentDate.toISOString().split('T')[0];
+        //         const anotherResponse = await axios.post(`http://localhost:8080/orders/create`, {
+        //             "userId": Cookies.get('userId'), // Ensure 'userId' is correctly defined or fetched
+        //             "products": productData, // Ensure this method correctly extracts product IDs
+        //             "content": "",
+        //             "date": formattedDate,
+        //             "userInfo": Cookies.get('session_id'),
+        //             withCredentials: true 
+        //         });
+        //         console.log('Handled 404, new data:', anotherResponse.data);
+        //     } else {
+        //         console.error('Error in request:', error);
+        //     }
+        // }
+        const productsArray = [productData]; // Ensure this is an array of product objects
+    try {
+        const sessionId = Cookies.get('session_id');
+        if (!sessionId) {
+            alert("Please login to continue.");
+            return;
         }
+
+        // Simulate checking for an existing order
+        const response = await axios.get(`http://localhost:8080/orders/exist`, {
+            params: { sessionId: sessionId },
+            headers: {"Content-Type" : 'application/json;charset=UTF-8'},
+            withCredentials: true
+        });
+
+        if (response.status === 200) {
+            const patchResponse = await axios.patch(`http://localhost:8080/orders/update`, {
+                products: productsArray, // Send as array
+                withCredentials: true,
+                headers: {"Content-Type" : 'application/json;charset=UTF-8'},
+
+            });
+            console.log('Patch successful:', patchResponse.data);
+        }
+    } catch (error) {
+        const sessionId = Cookies.get('session_id');
+
+        if (error.response && error.response.status === 404) {
+            const currentDate = new Date();
+            const formattedDate = currentDate.toISOString().split('T')[0];
+            const anotherResponse = await axios.post(`http://localhost:8080/orders/create`, {
+                headers: {"Content-Type" : 'application/json;charset=UTF-8'},
+                userId: Cookies.get('userId'), // Ensure 'userId' is correctly defined or fetched
+                products: productsArray.map((product) => ({
+                    id: product.id,
+                    price: product.price,
+                    description: product.description,
+                    quantity: product.quantity,
+                    name: product.name,
+                    categories: product.categories
+                })), 
+                content: "",
+                date: formattedDate,
+                userInfo: sessionId,
+                withCredentials: true 
+            });
+            console.log('Handled 404, new data:', anotherResponse.data);
+        } else {
+            console.error('Error in request:', error);
+        }
+    }
     };
 
     return (
@@ -240,7 +331,7 @@ const Catalog = () => {
                                     if (!Cookies.get('session_id')) {
                                         alert("You must be logged in before starting your shopping journey (;")
                                     } else {
-                                        setProductData(product.id)
+                                        setProductData(product)
                                     }
                                 }}>
                                     Add
