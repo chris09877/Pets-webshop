@@ -5,6 +5,7 @@ import chris.ilg.dierenwinkel.repository.UserRepo;
 import chris.ilg.dierenwinkel.service.OrderServiceImpl;
 import chris.ilg.dierenwinkel.service.OrdersDto;
 import chris.ilg.dierenwinkel.service.UserServiceImpl;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -44,6 +45,7 @@ public class Orders {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = true)
+    @JsonManagedReference
     private User user;
 
     @ManyToMany

@@ -1,5 +1,6 @@
 package chris.ilg.dierenwinkel.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.lang.reflect.Array;
@@ -13,6 +14,7 @@ public class Product {
     private int id;
 
     @ManyToMany(mappedBy = "products")
+    @JsonBackReference
     private List<Orders> orders = new ArrayList<Orders>();
     @Column(nullable = false, length = 255)
     private String name,description;

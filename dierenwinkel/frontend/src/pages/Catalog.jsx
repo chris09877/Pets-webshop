@@ -153,6 +153,8 @@ const Catalog = () => {
             try {
                 const response = await axios.get('http://localhost:8080/api/product/all');
                 setProducts(response.data);
+                console.log(`product contain: ${products}`);
+                console.log(products);
             } catch (error) {
                 console.error('Error fetching products:', error);
                 setProducts([]);
@@ -168,7 +170,7 @@ const Catalog = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.get(`http://localhost:8080/orders/exist`, Cookies.get('session_id'));
+            const response = await axios.get(`http://localhost:8080/orders/exist`);
 
             if (response.status === 200) {
                 const patchResponse = await axios.patch(`http://localhost:8080/orders/update`, {
