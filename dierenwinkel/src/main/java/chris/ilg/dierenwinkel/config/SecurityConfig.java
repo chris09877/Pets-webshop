@@ -63,7 +63,7 @@ public class SecurityConfig   {
                     config.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "PATCH", "DELETE"));
                     config.setAllowedHeaders(Arrays.asList("Content-Type", "POST","Authorization")); // Adjust as needed
                     config.addExposedHeader("Set-Cookie");
-                    config.setExposedHeaders(Arrays.asList("Set-Cookie", "Session-ID"));
+                    config.setExposedHeaders(Arrays.asList("Set-Cookie", "Session-ID", "User-ID"));
                     config.setAllowCredentials(true);
                     return config;}))
 

@@ -18,43 +18,25 @@ const FormLogin = () => {
       let data = await response.data;
       let headers = await response.headers;
       console.log('Login successful:', data);
-      const cookies = response.headers['set-cookie'];
-      // const cookies = document.cookie;
-      console.log("Headers: " + headers);
-      //console.log("header set cookie: " + data.headers.get('Set-Cookie'));
-      console.log("cookie :" + document.cookie);
+      console.log("SESSION ID: " + headers.get('session-id'));
+      console.log("USER ID: " + headers.get('User-ID'));
 
-      if (cookies) {
-        const xsrfToken = cookies.find(cookie => cookie.startsWith('xsrf-token='));
-        if (xsrfToken) {
-          const tokenValue = xsrfToken.split(';')[0].split('=')[1];
-          console.log('XSRF Token:', tokenValue);
-          Cookies.set('csrf-token', tokenValue, { expires: 4 / 24 }); // Expires in 4 hours
-        }
-  
-        const session_id = cookies.find(cookie => cookie.startsWith('jsessionid='));
-        if (session_id) {
-          const sessionValue = session_id.split(';')[0].split('=')[1];
-          console.log('jsessionid:', sessionValue);
-          Cookies.set('session_id', sessionValue, { expires: 4 / 24 }); // Expires in 4 hours
-        }
-  
-        const userId = cookies.find(cookie => cookie.startsWith('userID='));
-        if (userId) {
-          const idValue = userId.split(';')[0].split('=')[1];
-          console.log('User ID:', idValue);
-          Cookies.set('userId', idValue, { expires: 4 / 24 }); // Expires in 4 hours
-        }
-      }
-    } 
+      let header_session = headers.get('session-id');
+      let header_user = headers.get('User-ID');
+      Cookies.set('session_id', header_session, { expires: 4 / 24 }); // Expires in 4 hours
+      Cookies.set('userId', header_user, { expires: 4 / 24 }); // Expires in 4 hours
+      
+    }
+
     catch (error) {
       console.error('Login failed:', error.response ? error.response.data : error.message);
     }
-  };
+  }
 
-    
 
-  
+
+
+
 
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });

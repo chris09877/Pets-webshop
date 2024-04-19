@@ -65,30 +65,6 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request,HttpServletResponse response) {
 
-//        try {
-//            CustomUserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getMail());
-//            logger.info(loginRequest.getPwd() + " userdetails: " + userDetails.getPassword());
-//
-//            // Compare entered password with hashed password
-//            if (passwordEncoder.matches(loginRequest.getPwd(), userDetails.getPassword())) {
-//                logger.info("Password match");
-//                Authentication authentication = authenticationManager.authenticate(
-//                        new UsernamePasswordAuthenticationToken(
-//                                loginRequest.getMail(), loginRequest.getPwd()
-//                        )
-//                );
-//                SecurityContextHolder.getContext().setAuthentication(authentication);
-//                CustomSessionAuthentication customSessionAuthentication = new CustomSessionAuthentication();
-//                customSessionAuthentication.onAuthentication(authentication, request, response);
-//                return ResponseEntity.ok().build();  // Success handler will add CSRF token
-//            } else {
-//                logger.info("Password does not match");
-//                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Password mismatch");
-//            }
-//        } catch (AuthenticationException e) {
-//            logger.error("Authentication failed", e);
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed");
-//        }
         try {
             CustomUserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getMail());
             if (passwordEncoder.matches(loginRequest.getPwd(), userDetails.getPassword())) {
@@ -103,7 +79,8 @@ public class AuthController {
                     logger.error("Error during post-authentication: {}", e.getMessage(), e);
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Login processing error");
                 }
-                // Assuming you want to return a simple success message
+                int userId = userDetails.getId(); // Assuming getId() is implemented to return user ID
+                response.setHeader("User-ID", String.valueOf(userId));
                 return ResponseEntity.ok("Login successful");
             } else {
                 logger.info("Password does not match");
