@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -31,9 +32,10 @@ public class OrderController {
 @PostMapping("/create")
 public ResponseEntity<?> add(@RequestBody OrdersDto ordersDto, HttpServletRequest request) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    if (authentication == null || !authentication.isAuthenticated()) {
+    if (authentication == null || authentication instanceof AnonymousAuthenticationToken || !authentication.isAuthenticated()) {
         return new ResponseEntity<>("User is not authenticated", HttpStatus.UNAUTHORIZED);
     }
+
 
     logger.info("Received new order dto  A ZBEEEEEE: {}", ordersDto);
     //Orders order = new Orders(ordersDto);

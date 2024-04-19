@@ -77,7 +77,7 @@ public class SecurityConfig   {
                         authorize.requestMatchers("http://localhost:*").permitAll()
                                 .requestMatchers("http://localhost:5713/*").permitAll()
                                 .requestMatchers("http://localhost:5713/validate").authenticated()
-                                .requestMatchers("/admin").hasRole("ADMIN")
+                                //.requestMatchers("/admin").hasRole("ADMIN")
 
                 ).formLogin(
                         form -> form
@@ -98,6 +98,9 @@ public class SecurityConfig   {
                 .sessionManagement( sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)  // Match application.properties setting
                         .sessionAuthenticationStrategy(new CustomSessionAuthentication())
+                        .invalidSessionUrl("/login") // Redirect to login if the session is invalid
+                        .maximumSessions(1) // Allow only one session per user
+                        .expiredUrl("/login?expired") // Redirect to login if the session expires
                 );
 
     }
