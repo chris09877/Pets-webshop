@@ -2,6 +2,7 @@ package chris.ilg.dierenwinkel.model;
 
 import chris.ilg.dierenwinkel.controller.UserController;
 import chris.ilg.dierenwinkel.repository.UserRepo;
+import chris.ilg.dierenwinkel.service.OrderServiceImpl;
 import chris.ilg.dierenwinkel.service.OrdersDto;
 import chris.ilg.dierenwinkel.service.UserServiceImpl;
 import jakarta.persistence.*;
@@ -14,16 +15,25 @@ import java.util.List;
 
 @Entity
 public class Orders {
+
+
     public Orders() {}
 
-    public Orders(OrdersDto ordersDto) {
-        // Initialize Orders object using data from OrdersDto
+//    public Orders(OrdersDto ordersDto) {
+//        // Initialize Orders object using data from OrdersDto
+//        this.content = ordersDto.getContent();
+//        this.date = ordersDto.getDate();
+//        this.products = ordersDto.getProducts();
+//        this.userInfo = ordersDto.getUserInfo();
+//        this.user = UserServiceImpl.getUserByID(ordersDto.getUserId());
+//
+//    }
+    public Orders(OrdersDto ordersDto, User user) {
         this.content = ordersDto.getContent();
         this.date = ordersDto.getDate();
         this.products = ordersDto.getProducts();
         this.userInfo = ordersDto.getUserInfo();
-        this.user = UserServiceImpl.getUserByID(ordersDto.getUserId());
-
+        this.user = user;
     }
 
 

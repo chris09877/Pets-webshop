@@ -3,9 +3,12 @@ package chris.ilg.dierenwinkel.controller;
 import chris.ilg.dierenwinkel.model.Orders;
 import chris.ilg.dierenwinkel.service.OrderServiceImpl;
 import chris.ilg.dierenwinkel.service.OrdersDto;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,13 +21,26 @@ public class OrderController {
     private OrderServiceImpl orderService;
     private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
-    @PostMapping("/create")
-    public String add(@RequestBody OrdersDto ordersDto){
-        logger.info("Received new order A ZBEEEEEE: {}", ordersDto);
-        Orders order = new Orders(ordersDto);
-        orderService.saveOrder(ordersDto);
-        return "New order is added";
+//    @PostMapping("/create")
+//    public String add(@RequestBody OrdersDto ordersDto){
+//        logger.info("Received new order A ZBEEEEEE: {}", ordersDto);
+//        Orders order = new Orders(ordersDto);
+//        orderService.saveOrder(ordersDto);
+//        return "New order is added";
+//    }
+@PostMapping("/create")
+public ResponseEntity<?> add(@RequestBody OrdersDto ordersDto, HttpServletRequest request) {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication == null || !authentication.isAuthenticated()) {
+        return new ResponseEntity<>("User is not authenticated", HttpStatus.UNAUTHORIZED);
     }
+
+    logger.info("Received new order dto  A ZBEEEEEE: {}", ordersDto);
+    //Orders order = new Orders(ordersDto);
+    orderService.saveOrder(ordersDto);
+    return ResponseEntity.ok("New order is added");
+}
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Orders> get (@PathVariable int id)

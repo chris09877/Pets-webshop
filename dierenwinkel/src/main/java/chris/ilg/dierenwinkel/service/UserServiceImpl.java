@@ -11,7 +11,7 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private  UserRepo userRepo;
-    private  static UserRepo userRepo2;
+    //private  static UserRepo userRepo2;
     @Autowired
     private  PasswordEncoder passwordEncoder;
 
@@ -26,9 +26,9 @@ public class UserServiceImpl implements UserService{
     public User getUserById(int id) {
         return userRepo.getById(id);
     }
-    public static  User getUserByID(int id) {
-        return userRepo2.getById(id);
-    }
+//    public static  User getUserByID(int id) {
+//        return userRepo2.getById(id);
+//    }
 
     @Override
     public User getUserByMail(String mail) {

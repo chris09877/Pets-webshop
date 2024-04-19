@@ -1,6 +1,7 @@
 package chris.ilg.dierenwinkel.service;
 
 import chris.ilg.dierenwinkel.model.Orders;
+import chris.ilg.dierenwinkel.model.User;
 import chris.ilg.dierenwinkel.repository.OrderRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -20,13 +21,18 @@ public class OrderServiceImpl implements OrderService{
     }
 
 
-
+@Autowired
+private UserServiceImpl userServiceImpl;
 
     @Autowired
     public OrderRepo orderRepo;
     @Override
     public Orders saveOrder(OrdersDto ordersDto) {
-        Orders order = new Orders(ordersDto) ;
+        User user = userServiceImpl.getUserById(ordersDto.getUserId());
+        if (user == null) {
+            throw new RuntimeException("User not found");  // Or handle this case as needed
+        }
+        Orders order = new Orders(ordersDto, user);
         return orderRepo.save(order);
 
     }
