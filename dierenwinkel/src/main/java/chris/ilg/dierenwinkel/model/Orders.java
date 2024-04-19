@@ -22,15 +22,6 @@ public class Orders {
 
     public Orders() {}
 
-//    public Orders(OrdersDto ordersDto) {
-//        // Initialize Orders object using data from OrdersDto
-//        this.content = ordersDto.getContent();
-//        this.date = ordersDto.getDate();
-//        this.products = ordersDto.getProducts();
-//        this.userInfo = ordersDto.getUserInfo();
-//        this.user = UserServiceImpl.getUserByID(ordersDto.getUserId());
-//
-//    }
     public Orders(OrdersDto ordersDto, User user) {
         this.content = ordersDto.getContent();
         this.date = ordersDto.getDate();

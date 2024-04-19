@@ -44,27 +44,6 @@ public ResponseEntity<?> add(@RequestBody OrdersDto ordersDto, HttpServletReques
     orderService.saveOrder(ordersDto);
     return ResponseEntity.ok("New order is added");
 }
-//@PostMapping("/create")
-//public ResponseEntity<?> add(@RequestBody OrdersDto ordersDto, HttpServletRequest request) {
-//    HttpSession session = request.getSession(false);
-//    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//    logger.info("Session check - Exists: {}, ID: {}", session != null, session != null ? session.getId() : "N/A");
-//    logger.info("Authentication check - Exists: {}, Authenticated: {}", authentication != null, authentication != null && authentication.isAuthenticated());
-//    logger.info("User details: {}", authentication != null ? authentication.getName() : "N/A");
-//
-//    //if (session == null || authentication == null || !authentication.isAuthenticated()) {
-//      if (authentication == null || /*authentication instanceof AnonymousAuthenticationToken ||*/ !authentication.isAuthenticated()) {
-//
-//    return new ResponseEntity<>("User is not authenticated", HttpStatus.UNAUTHORIZED);
-//    }
-//
-//    logger.info("Session ID: {}", session.getId());
-//    logger.info("Received new order dto: {}", ordersDto);
-//    orderService.saveOrder(ordersDto);
-//    return ResponseEntity.ok("New order is added");
-//}
-
 
 
 
@@ -100,26 +79,7 @@ public ResponseEntity<?> add(@RequestBody OrdersDto ordersDto, HttpServletReques
         return orderService.updateOrder(userInfo, updatedOrderDto);
     }
 
-//    @GetMapping("/find")
-//    public ResponseEntity<Orders> getOrderByUserId(@RequestParam Integer userId, HttpServletRequest request) {
-//        logger.info("Getting the order with user id: " + userId);
-//        ArrayList<Orders> orderArray = orderService.getAllOrdersByUserId(userId);
-//        if (orderArray != null ){
-//            orderArray.forEach(order -> {
-//                if (order.getUserInfo() === request.getSession()){
-//                    return ResponseEntity.ok(order);
-//                }
-//                else {
-//                    logger.info("No order found with the matching user info");
-//                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-//                }
-//            });
-//        }
-//        else {
-//            logger.info("No order found with the matching id");
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-//        }
-//    }
+
 @GetMapping("/find")
 public ResponseEntity<List<Orders>> getOrderByUserId(@RequestParam Integer userId, HttpServletRequest request) {
     logger.info("Getting the orders for user id: {}", userId);
