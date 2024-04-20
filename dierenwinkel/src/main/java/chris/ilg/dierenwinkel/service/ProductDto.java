@@ -1,5 +1,7 @@
 package chris.ilg.dierenwinkel.service;
 
+import chris.ilg.dierenwinkel.model.Product;
+
 public class ProductDto {
 
     private int id;
@@ -8,6 +10,18 @@ public class ProductDto {
     private double price;
     private int quantity;
     private int categoryId;
+
+    public ProductDto() {
+    }
+
+    public ProductDto(Product p) {
+        this.id = p.getId();
+        this.name =p.getName();
+        this.description = p.getDescription();
+        this.price = p.getPrice();
+        this.quantity = p.getQuantity();
+        this.categoryId = p.getCategories().getValue();
+    }
 
     public int getId() {
         return id;

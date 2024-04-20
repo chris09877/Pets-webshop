@@ -79,7 +79,7 @@ private UserServiceImpl userServiceImpl;
             return existingOrder;
         }
         else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found for userInfo: " + userId);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found for user id: " + userId);
         }
     }
 

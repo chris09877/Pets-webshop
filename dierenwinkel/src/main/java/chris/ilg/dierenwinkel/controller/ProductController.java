@@ -2,6 +2,7 @@ package chris.ilg.dierenwinkel.controller;
 
 import chris.ilg.dierenwinkel.model.Product;
 import chris.ilg.dierenwinkel.model.User;
+import chris.ilg.dierenwinkel.service.ProductDto;
 import chris.ilg.dierenwinkel.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,12 +43,16 @@ public class ProductController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<ArrayList<Product>> getAll() {
+    public ResponseEntity<ArrayList<ProductDto>> getAll() {
         logger.info("Getting all products");
 
         ArrayList<Product> products = productService.getAllProduct();
+        ArrayList<ProductDto> productDtos = new ArrayList<>();
         if (!products.isEmpty()) {
-            return ResponseEntity.ok(products); // Return 200 OK response with the list of products
+            products.forEach(product -> {
+                productDtos.add(new ProductDto(product));
+            });
+            return ResponseEntity.ok(productDtos); // Return 200 OK response with the list of products
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // Return 500 Internal Server Error if products not found
         }

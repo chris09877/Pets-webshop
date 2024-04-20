@@ -74,9 +74,11 @@ public ResponseEntity<?> add(@RequestBody OrdersDto ordersDto, HttpServletReques
     }
 
     @PatchMapping("/update")
-    public Orders updateOrder(HttpServletRequest request, @RequestParam String userInfo, @RequestBody OrdersDto updatedOrderDto) {
+    public OrdersDto updateOrder(HttpServletRequest request, @RequestParam String userInfo, @RequestBody OrdersDto updatedOrderDto) {
         logger.info("Updating the order with session ID: " + userInfo);
-        return orderService.updateOrder(userInfo, updatedOrderDto);
+        Orders updateOrder = orderService.updateOrder(userInfo, updatedOrderDto);
+
+        return new OrdersDto(updateOrder);
     }
 
 
@@ -91,7 +93,7 @@ public ResponseEntity<List<Orders>> getOrderByUserId(@RequestParam Integer userI
     }
 
     // Assuming UserInfo is something you can retrieve from the session (this needs to be correctly implemented)
-    String currentUserInfo = (String) request.getSession().getAttribute("UserInfo");  // Example: how you might get user info from session
+    String currentUserInfo = request.getSession().getId();  // Example: how you might get user info from session
 
     // Filter orders that match the session user info
     List<Orders> filteredOrders = orderList.stream()
@@ -99,7 +101,7 @@ public ResponseEntity<List<Orders>> getOrderByUserId(@RequestParam Integer userI
             .collect(Collectors.toList());
 
     if (filteredOrders.isEmpty()) {
-        logger.info("No order found with the matching user info for user id {}", userId);
+        logger.info("No order found with the matching user info ", currentUserInfo);
         return ResponseEntity.notFound().build();
     }
 

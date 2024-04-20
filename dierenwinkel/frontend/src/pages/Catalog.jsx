@@ -5,25 +5,56 @@ import OrderDetails from '../components/OrderDetails';
 import NavBar from '../components/NavBar';
 import Filter from '../components/Filter';
 import Cookies from 'js-cookie';
+
 const Catalog = () => {
     const [products, setProducts] = useState([]);
     const [showBtn, setShowBtn] = useState(true);
     const [productData, setProductData] = useState({});
-
+    const allProducts = [];
     useEffect(() => {
-        async function fetchProducts() {
-            try {
-                const response = await axios.get('http://localhost:8080/api/product/all');
-                setProducts(response.data);
-                console.log(`product contain: ${products}`);
-                console.log(products);
-            } catch (error) {
-                console.error('Error fetching products:', error);
-                setProducts([]);
+        
+            async function fetchProducts() {
+                try {
+                    if(allProducts.length ===0 || allProducts.length === null){
+                    const response = await axios.get('http://localhost:8080/api/product/all');
+                    let data = await response.data;
+                    setProducts(data);
+                    allProducts = [...data];
+                    //return response.data;
+                    if(products.length ===0 || products.length === null){
+                        console.log("proucts use state zero");
+                    }
+                    else{
+                        console.log(`product contain: ${products}`);
+                        console.log(products);
+                        fetchProducts(products)
+                    }
+                }
+                else{
+                    console.log(`the content of allProucts: ${allProducts}`);
+                        setProducts(allProducts);
+                }
+                    
+                } catch (error) {
+                    console.error('Error fetching products:', error);
+                    //setProducts([]);
+                }
             }
-        }
+            
+        
+       
+        
         fetchProducts();
     }, []);
+    // useEffect(() => {
+    //     const fetchAndSetProducts = async () => {
+    //         const fetched = await fetchProducts();
+    //         setProducts(fetched);
+    //         console.log(`product contain: ${products}`);
+
+    //     };
+    //     fetchAndSetProducts();
+    // }, []);
 
     const handleProductChange = (updatedProducts) => {
         setProducts(updatedProducts);
@@ -121,7 +152,7 @@ console.log('Patch successful:', patchResponse.data);
 
                 <h1>MENU</h1>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {products.map((product) => (
+                    {Array.isArray(products) && products.map((product) => (
                         <form key={product.id} onSubmit={(e) => handleSubmit(e)}>
                             <div className="bg-white p-4 shadow-md">
                                 <Link to={`/products/${product.id}`} className="block">

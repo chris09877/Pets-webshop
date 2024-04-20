@@ -1,5 +1,6 @@
 package chris.ilg.dierenwinkel.service;
 
+import chris.ilg.dierenwinkel.model.Orders;
 import chris.ilg.dierenwinkel.model.Product;
 
 import java.sql.Date;
@@ -15,6 +16,17 @@ public class OrdersDto {
     private Date date;
     private String userInfo;
 
+    public OrdersDto() {
+    }
+
+    public OrdersDto(Orders o) {
+        this.id = o.getId();
+        this.userId = o.getUser().getId();
+        this.products = o.getProducts();
+        this.content = o.getContent();
+        this.date = o.getDate();
+        this.userInfo = o.getUserInfo();
+    }
     // Getters and setters
 
     public int getId() {
