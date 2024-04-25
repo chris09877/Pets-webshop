@@ -15,11 +15,11 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToMany(mappedBy = "products")
-    //@JsonBackReference
-    //private List<Orders> orders = new ArrayList<Orders>();
-    private Set<Orders> orders = new HashSet<>();
-
+//    @ManyToMany(mappedBy = "products")
+//    //@JsonBackReference
+//    private Set<Orders> orders = new HashSet<>();
+    @OneToMany(mappedBy = "product")
+    private Set<OrderProduct> orderProducts;
     @Column(nullable = false, length = 255)
     private String name,description;
     @Column(nullable = false)
@@ -91,11 +91,19 @@ public class Product {
         this.categories = categories;
     }
 
-    public Set<Orders> getOrders() {
-        return orders;
+//    public Set<Orders> getOrders() {
+//        return orders;
+//    }
+//
+//    public void setOrders(Set<Orders> orders) {
+//        this.orders = orders;
+//    }
+
+    public Set<OrderProduct> getOrderProducts() {
+        return orderProducts;
     }
 
-    public void setOrders(Set<Orders> orders) {
-        this.orders = orders;
+    public void setOrderProducts(Set<OrderProduct> orderProducts) {
+        this.orderProducts = orderProducts;
     }
 }

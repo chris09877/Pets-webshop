@@ -66,6 +66,7 @@ const Catalog = () => {
         const productsArray = [productData]; // Ensure this is an array of product objects
     try {
         const sessionId = Cookies.get('session_id');
+        let orderId = null;
         if (!sessionId) {
             alert("Please login to continue.");
             return;
@@ -79,19 +80,27 @@ const Catalog = () => {
         },
             withCredentials: true
         });
+        response.json()
+        .then(
+            data =>{
+                orderId = data.orderId;
+                console.log('The order id is:', orderId);
+            })
 
         if (response.status === 200) {
            // Assuming Cookies.get('session_id') retrieves the current session ID stored in cookies
+           response
 const sessionId = Cookies.get('session_id');
 console.log(sessionId);
 const patchResponse = await axios.patch(`http://localhost:8080/orders/update`, {
     products: productsArray.map(product => ({
-        id: product.id,
+        orderId:orderId,
+        productId: product.id,
         price: product.price,
-        description: product.description,
         quantity: product.quantity,
         name: product.name,
-        categories: product.categories
+        total: product.quantity*product.price
+
     }))
 }, {
     params:{ userInfo: sessionId},
@@ -110,13 +119,13 @@ console.log('Patch successful:', patchResponse.data);
             const anotherResponse = await axios.post(`http://localhost:8080/orders/create`, {
                 headers: {"Content-Type": "application/json;charset=UTF-8"},
                 userId: Cookies.get('userId'), // Ensure 'userId' is correctly defined or fetched
-                products: productsArray.map((product) => ({
-                    id: product.id,
+                productDto: productsArray.map((product) => ({
+                    orderdId: null,
+                    productId: product.id,
                     price: product.price,
-                    description: product.description,
                     quantity: product.quantity,
                     name: product.name,
-                    categories: product.categories
+                    total: product.quantity*product.price
                 })), 
                 content: "",
                 date: formattedDate,

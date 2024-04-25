@@ -1,6 +1,9 @@
 package chris.ilg.dierenwinkel.controller;
 
+import chris.ilg.dierenwinkel.model.OrderProduct;
 import chris.ilg.dierenwinkel.model.Orders;
+import chris.ilg.dierenwinkel.service.OrderProductDto;
+import chris.ilg.dierenwinkel.service.OrderProductServiceImpl;
 import chris.ilg.dierenwinkel.service.OrderServiceImpl;
 import chris.ilg.dierenwinkel.service.OrdersDto;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,8 +18,11 @@ import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.springframework.web.servlet.function.ServerResponse.status;
 
 @RestController
 @RequestMapping("/orders")
@@ -25,6 +31,8 @@ public class OrderController {
     private OrderServiceImpl orderService;
     private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
+    @Autowired
+    private OrderProductServiceImpl orderProductServiceImpl;
 @PostMapping( "/create")
 public ResponseEntity<?> add(@RequestBody OrdersDto ordersDto, HttpServletRequest request) {
     HttpSession session = request.getSession(true); // Get existing session if it exists
@@ -74,11 +82,14 @@ public ResponseEntity<?> add(@RequestBody OrdersDto ordersDto, HttpServletReques
     }
 
     @PatchMapping("/update")
-    public OrdersDto updateOrder(HttpServletRequest request, @RequestParam String userInfo, @RequestBody OrdersDto updatedOrderDto) {
-        logger.info("Updating the order with session ID: " + userInfo);
-        Orders updateOrder = orderService.updateOrder(userInfo, updatedOrderDto);
-
-        return new OrdersDto(updateOrder);
+    public ResponseEntity <?> updateOrder(HttpServletRequest request, @RequestParam String userInfo, @RequestBody OrderProductDto orderProductDto) {
+        logger.info("Finding the order with session ID: " + userInfo);
+        Orders updateOrder = orderService.getOrderByUserInfo(userInfo);
+        if (updateOrder == null){return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No order found with this session id in the user info field:" + userInfo);}
+        OrderProduct op = orderProductServiceImpl.create(orderProductDto);
+        if (op == null){return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong during the creation of the order product:");}
+        List<OrderProduct> listOP = orderProductServiceImpl.getAllByOrderId(updateOrder.getId());
+        return ResponseEntity.ok().body(listOP);
     }
 
 
@@ -110,11 +121,11 @@ public ResponseEntity<List<Orders>> getOrderByUserId(@RequestParam Integer userI
 
 
     @GetMapping("/exist")
-    public ResponseEntity<Orders> getOrderByUserInfo(@RequestParam String sessionId) {
+    public ResponseEntity<?> getOrderByUserInfo(@RequestParam String sessionId) {
         logger.info("Getting the order with user info: " + sessionId);
         Orders order = orderService.getOrderByUserInfo(sessionId);
         if (order != null ){
-            return ResponseEntity.ok(order);
+            return ResponseEntity.ok().body(Collections.singletonMap("orderId", order.getId()));
         }
         else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

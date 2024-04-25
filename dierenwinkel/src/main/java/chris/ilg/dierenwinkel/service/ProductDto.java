@@ -1,5 +1,6 @@
 package chris.ilg.dierenwinkel.service;
 
+import chris.ilg.dierenwinkel.model.Orders;
 import chris.ilg.dierenwinkel.model.Product;
 
 public class ProductDto {
@@ -22,6 +23,17 @@ public class ProductDto {
         this.quantity = p.getQuantity();
         this.categoryId = p.getCategories().getValue();
     }
+
+    public ProductDto(Product p, Orders o) {
+        this.id = p.getId();
+        this.name =p.getName();
+        this.description = p.getDescription();
+        this.price = p.getPrice();
+        this.quantity = p.getQuantity();
+        this.categoryId = p.getCategories().getValue();
+    }
+
+
 
     public int getId() {
         return id;
