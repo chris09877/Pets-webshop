@@ -52,7 +52,7 @@ const OrderDetails = () => {
   };
 
   const handleOrder = () => {
-    // Implement logic for handling the order button click
+    window.location.href = '/checkout';
   };
 
   return (
