@@ -204,6 +204,7 @@ const OrderDetails = () => {
         params: { userId: user_id },
         withCredentials: true
       });
+      console.log(response.data);
       return response.data; // Ensure that data is returned for use in then()
     } catch (error) {
       setError('Error fetching order details');

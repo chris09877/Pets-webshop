@@ -22,6 +22,8 @@ public class OrderProduct {
         this.price = opd.getPrice();
         this.total = opd.getTotal();
         this.name = opd.getName();
+        this.productId = p.getId();
+        this.orderId = o.getId();
     }
 
     @Id
@@ -52,16 +54,17 @@ public class OrderProduct {
     }
 
     public int getProductId() {
-        return productId;
+        return product.getId();
     }
+
 
     public void setProductId(int productId) {
         this.productId = product.getId();
     }
 
     public int getOrderId() {
-        return orderId;
-    }
+        return order.getId();
+        }
 
     public void setOrderId(int orderId) {
         this.orderId = order.getId();

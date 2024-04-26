@@ -125,7 +125,7 @@ public class OrderController {
         }
         Orders filteredOrder = filteredOrders.get(0);
         List<OrderProductDto> listOPD = orderProductServiceImpl.getAllByOrderId(filteredOrder.getId());
-
+        logger.info("the list if products size:" + listOPD.size() + " The to string: " + listOPD.toString());
         return ResponseEntity.ok(listOPD);
     }
 
