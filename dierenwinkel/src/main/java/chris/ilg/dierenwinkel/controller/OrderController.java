@@ -2,10 +2,8 @@ package chris.ilg.dierenwinkel.controller;
 
 import chris.ilg.dierenwinkel.model.OrderProduct;
 import chris.ilg.dierenwinkel.model.Orders;
-import chris.ilg.dierenwinkel.service.OrderProductDto;
-import chris.ilg.dierenwinkel.service.OrderProductServiceImpl;
-import chris.ilg.dierenwinkel.service.OrderServiceImpl;
-import chris.ilg.dierenwinkel.service.OrdersDto;
+import chris.ilg.dierenwinkel.model.Product;
+import chris.ilg.dierenwinkel.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +32,9 @@ public class OrderController {
 
     @Autowired
     private OrderProductServiceImpl orderProductServiceImpl;
+
+    @Autowired
+    private ProductServiceImpl productService;
 
     @PostMapping("/create")
     public ResponseEntity<?> add(@RequestBody OrdersDto ordersDto, HttpServletRequest request) {
@@ -88,10 +89,11 @@ public class OrderController {
         if (updateOrder == null) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No order found with this session id in the user info field:" + userInfo);
         }
-       //OrderProduct op = orderProductServiceImpl.create(orderProductDto);
-//        if (op == null) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong during the creation of the order product:");
-//        }
+        Product product = productService.getProductById(orderProductDto.getProductId());
+       OrderProduct op = orderProductServiceImpl.create(orderProductDto,product, updateOrder);
+        if (op == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong during the creation of the order product:");
+        }
         List<OrderProduct> listOP = orderProductServiceImpl.getAllByOrderId(updateOrder.getId());
         return ResponseEntity.ok().body(listOP);
     }
