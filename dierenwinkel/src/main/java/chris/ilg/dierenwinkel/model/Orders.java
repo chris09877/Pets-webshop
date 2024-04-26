@@ -2,6 +2,7 @@ package chris.ilg.dierenwinkel.model;
 
 import chris.ilg.dierenwinkel.controller.UserController;
 import chris.ilg.dierenwinkel.repository.UserRepo;
+import chris.ilg.dierenwinkel.service.OrderProductServiceImpl;
 import chris.ilg.dierenwinkel.service.OrderServiceImpl;
 import chris.ilg.dierenwinkel.service.OrdersDto;
 import chris.ilg.dierenwinkel.service.UserServiceImpl;
@@ -23,11 +24,12 @@ public class Orders {
     public Orders() {
     }
 
-    public Orders(OrdersDto ordersDto, User user/*, OrderProduct op*/) {
+    public Orders(OrdersDto ordersDto, User user) {
         this.content = ordersDto.getContent();
         this.date = ordersDto.getDate();
         this.orderProducts = new HashSet<>(); // Initialize the set
         /*this.orderProducts.add(op);*/ //        this.userInfo = ordersDto.getUserInfo();
+        //this.orderProducts.add(new OrderProductServiceImpl().create(ordersDto.getOrderProductsDto()));
         this.user = user;
         this.userInfo = ordersDto.getUserInfo();
     }
@@ -38,7 +40,7 @@ public class Orders {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = true)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     //    @ManyToMany
@@ -51,12 +53,11 @@ public class Orders {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrderProduct> orderProducts = new HashSet<>();
     @Column(nullable = true)
-    //@ElementCollection
     private String content;
     @Column(nullable = false, length = 100)
     private Date date;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private String userInfo;
 
 

@@ -37,19 +37,19 @@ public class OrderController {
 
     @PostMapping("/create")
     public ResponseEntity<?> add(@RequestBody OrdersDto ordersDto, HttpServletRequest request) {
-        HttpSession session = request.getSession(true); // Get existing session if it exists
-        if (session == null) {
-            //logger.info("No session found, user is not authenticated. Session id:" + session.getId());
-            return new ResponseEntity<>("User is not authenticated", HttpStatus.UNAUTHORIZED);
-        }
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || /*authentication instanceof AnonymousAuthenticationToken ||*/ !authentication.isAuthenticated()) {
-            logger.info("User is not properly authenticated, session ID is null");
-            return new ResponseEntity<>("User is not authenticated", HttpStatus.UNAUTHORIZED);
-        }
-
-        logger.info("Session ID: {}", request.getSession().getId());
+//        HttpSession session = request.getSession(true); // Get existing session if it exists
+//        if (session == null) {
+//            //logger.info("No session found, user is not authenticated. Session id:" + session.getId());
+//            return new ResponseEntity<>("User is not authenticated", HttpStatus.UNAUTHORIZED);
+//        }
+//
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if (authentication == null || /*authentication instanceof AnonymousAuthenticationToken ||*/ !authentication.isAuthenticated()) {
+//            logger.info("User is not properly authenticated, session ID is null");
+//            return new ResponseEntity<>("User is not authenticated", HttpStatus.UNAUTHORIZED);
+//        }
+//
+//        logger.info("Session ID: {}", request.getSession().getId());
         logger.info("Received new order dto A ZBEEEEEE: {}", ordersDto);
         orderService.saveOrder(ordersDto);
         return ResponseEntity.ok("New order is added");
@@ -88,10 +88,10 @@ public class OrderController {
         if (updateOrder == null) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No order found with this session id in the user info field:" + userInfo);
         }
-        OrderProduct op = orderProductServiceImpl.create(orderProductDto);
-        if (op == null) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong during the creation of the order product:");
-        }
+       //OrderProduct op = orderProductServiceImpl.create(orderProductDto);
+//        if (op == null) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong during the creation of the order product:");
+//        }
         List<OrderProduct> listOP = orderProductServiceImpl.getAllByOrderId(updateOrder.getId());
         return ResponseEntity.ok().body(listOP);
     }

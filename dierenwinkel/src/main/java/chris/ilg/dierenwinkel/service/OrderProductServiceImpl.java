@@ -3,6 +3,7 @@ package chris.ilg.dierenwinkel.service;
 import chris.ilg.dierenwinkel.model.OrderProduct;
 import chris.ilg.dierenwinkel.model.Orders;
 import chris.ilg.dierenwinkel.model.Product;
+import chris.ilg.dierenwinkel.model.User;
 import chris.ilg.dierenwinkel.repository.OrderProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class OrderProductServiceImpl implements OrderProductService {
 
 
     @Override
-    public OrderProduct create(OrderProductDto opd) {
+    public OrderProduct create(OrderProductDto opd, Product p, Orders o) {
 
 //       Orders o =  orderServiceImpl.getOrderById(opd.getOrderId());
 //       if (o == null){
@@ -32,7 +33,7 @@ public class OrderProductServiceImpl implements OrderProductService {
 //        if (p == null){
 //            System.out.println("No product found with matching id:" + opd.getProductId());
 //        }
-        OrderProduct op = new OrderProduct(opd);
+        OrderProduct op = new OrderProduct(opd,p,o);
         return orderProductRepo.save(op);
     }
 

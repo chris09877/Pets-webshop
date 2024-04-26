@@ -15,10 +15,9 @@ public class OrderProduct {
     public OrderProduct() {
     }
 
-    public OrderProduct(OrderProductDto opd) {
-        this.order = new OrderServiceImpl().getOrderById(opd.getOrderId());
-        ;
-        this.product = new ProductServiceImpl().getProductById(opd.getProductId());
+    public OrderProduct(OrderProductDto opd, Product p, Orders o) {
+        this.order = o;
+        this.product = p;
         this.quantity = opd.getQuantity();
         this.price = opd.getPrice();
         this.total = opd.getTotal();
@@ -120,7 +119,4 @@ public class OrderProduct {
         return total;
     }
 
-    public void setTotal(int total) {
-        this.total = total;
-    }
 }

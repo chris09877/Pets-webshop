@@ -15,6 +15,9 @@ public class OrdersDto {
     private int id;
     private int userId;
     private Set<OrderProduct> orderProducts = new HashSet<>();
+
+    private OrderProductDto orderProductsDto;
+
     private String content;
     private Date date;
     private String userInfo;
@@ -22,6 +25,17 @@ public class OrdersDto {
     public OrdersDto() {
     }
 
+    //
+    public OrdersDto(int id, int userId, OrderProductDto opd, String content, Date date, String userInfo) {
+        this.id = id;
+        this.userId = userId;
+        this.orderProductsDto = opd;
+        this.content = content;
+        this.date = date;
+        this.userInfo = userInfo;
+    }
+
+    //DTO TO SEND TO FRONTEND
     public OrdersDto(Orders o, OrderProduct op) {
         this.id = o.getId();
         this.userId = o.getUser().getId();
@@ -88,6 +102,14 @@ public class OrdersDto {
 
     public void setProducts(List<ProductDto2> products) {
         this.products = products;
+    }
+
+    public OrderProductDto getOrderProductsDto() {
+        return orderProductsDto;
+    }
+
+    public void setOrderProductsDto(OrderProductDto orderProductsDto) {
+        this.orderProductsDto = orderProductsDto;
     }
 
     public class ProductDto2 {

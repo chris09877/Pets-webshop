@@ -33,8 +33,36 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     public OrderRepo orderRepo;
 
+//    @Override
+//    public void saveOrder(OrdersDto ordersDto) {
+//        User user = userServiceImpl.getUserById(ordersDto.getUserId());
+//        if (user == null) {
+//            throw new RuntimeException("User not found");  // Or handle this case as needed
+//        }
+//
+//        Orders order = new Orders(ordersDto, user);
+//        Orders savedOrder = orderRepo.save(order);
+//        ordersDto.getOrderProductsDto().setOrderId(savedOrder.getId());
+//        Product product = productServiceImpl.getProductById(ordersDto.getId());
+//        OrderProduct op = orderProductService.create(ordersDto.getOrderProductsDto(), product, savedOrder);
+//        savedOrder.getOrderProducts().add(op);
+//        orderRepo.save(savedOrder);
+////        for (OrdersDto.ProductDto2 productDto : ordersDto.getProducts()) {
+////
+////            Product p = productServiceImpl.getProductById(productDto.getProductId());
+////
+////            OrderProductDto opd = new OrderProductDto(savedOrder.getId(), productDto.getProductId(), productDto.getQuantity(), productDto.getTotal(), productDto.getPrice(), productDto.getName());
+////            opd.setOrderId(savedOrder.getId());
+////            OrderProduct op = new OrderProduct(opd);
+////            orderProductService.create(opd);
+////        }
+//
+//    }
+
+
     @Override
     public void saveOrder(OrdersDto ordersDto) {
+        // Check for a valid user
         User user = userServiceImpl.getUserById(ordersDto.getUserId());
         if (user == null) {
             throw new RuntimeException("User not found");  // Or handle this case as needed
@@ -42,20 +70,24 @@ public class OrderServiceImpl implements OrderService {
 
         Orders order = new Orders(ordersDto, user);
         Orders savedOrder = orderRepo.save(order);
-        if (savedOrder == null) {
-            System.out.println("The order wasn't saved");
+
+        // Ensure that OrderProductsDto is not null
+        if (ordersDto.getOrderProductsDto() != null) {
+            ordersDto.getOrderProductsDto().setOrderId(savedOrder.getId());
+
+            Product product = productServiceImpl.getProductById(ordersDto.getOrderProductsDto().getProductId());
+            if (product == null) {
+                throw new RuntimeException("Product not found");  // Or handle as needed
+            }
+
+            OrderProduct op = orderProductService.create(ordersDto.getOrderProductsDto(), product, savedOrder);
+            savedOrder.getOrderProducts().add(op);
+            orderRepo.save(savedOrder);
+        } else {
+            throw new IllegalArgumentException("Order products details are missing");
         }
-        for (OrdersDto.ProductDto2 productDto : ordersDto.getProducts()) {
-
-            Product p = productServiceImpl.getProductById(productDto.getProductId());
-
-            OrderProductDto opd = new OrderProductDto(savedOrder.getId(), productDto.getProductId(), productDto.getQuantity(), productDto.getTotal(), productDto.getPrice(), productDto.getName());
-            opd.setOrderId(savedOrder.getId());
-            OrderProduct op = new OrderProduct(opd);
-            orderProductService.create(opd);
-        }
-
     }
+
 
     @Override
     public ArrayList<Orders> getAllOrders() {
