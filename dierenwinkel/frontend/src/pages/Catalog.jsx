@@ -12,49 +12,40 @@ const Catalog = () => {
     const [productData, setProductData] = useState({});
     const allProducts = [];
     useEffect(() => {
-        
-            async function fetchProducts() {
-                try {
-                    if(allProducts.length ===0 || allProducts.length === null){
+
+        async function fetchProducts() {
+            try {
+                if (allProducts.length === 0 || allProducts.length === null) {
                     const response = await axios.get('http://localhost:8080/api/product/all');
                     let data = await response.data;
                     setProducts(data);
                     allProducts = [...data];
                     //return response.data;
-                    if(products.length ===0 || products.length === null){
+                    if (products.length === 0 || products.length === null) {
                         console.log("proucts use state zero");
                     }
-                    else{
+                    else {
                         console.log(`product contain: ${products}`);
                         console.log(products);
                         fetchProducts(products)
                     }
                 }
-                else{
+                else {
                     console.log(`the content of allProucts: ${allProducts}`);
-                        setProducts(allProducts);
+                    setProducts(allProducts);
                 }
-                    
-                } catch (error) {
-                    console.error('Error fetching products:', error);
-                    //setProducts([]);
-                }
+
+            } catch (error) {
+                console.error('Error fetching products:', error);
+                //setProducts([]);
             }
-            
-        
-       
-        
+        }
+
+
+
+
         fetchProducts();
     }, []);
-    // useEffect(() => {
-    //     const fetchAndSetProducts = async () => {
-    //         const fetched = await fetchProducts();
-    //         setProducts(fetched);
-    //         console.log(`product contain: ${products}`);
-
-    //     };
-    //     fetchAndSetProducts();
-    // }, []);
 
     const handleProductChange = (updatedProducts) => {
         setProducts(updatedProducts);
@@ -62,81 +53,81 @@ const Catalog = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+            const formData = new FormData(e.target);
+        let product = products[products.length - 1];
+        product.quantity = formData.get('quantity');
         const productsArray = [productData]; // Ensure this is an array of product objects
-    try {
-        const sessionId = Cookies.get('session_id');
-        let orderId = null;
-        if (!sessionId) {
-            alert("Please login to continue.");
-            return;
-        }
+        try {
+            const sessionId = Cookies.get('session_id');
+            let orderId = null;
+            if (!sessionId) {
+                alert("Please login to continue.");
+                return;
+            }
 
-        // Simulate checking for an existing order
-        const response = await axios.get(`http://localhost:8080/orders/exist`, {
-            params: { sessionId: sessionId },
-            headers: {
-                "Content-Type": "application/json;charset=UTF-8"        
-        },
-            withCredentials: true
-        });
-        response.json()
-        .then(
-            data =>{
-                orderId = data.orderId;
-                console.log('The order id is:', orderId);
-            })
-
-        if (response.status === 200) {
-           // Assuming Cookies.get('session_id') retrieves the current session ID stored in cookies
-           response
-const sessionId = Cookies.get('session_id');
-console.log(sessionId);
-const patchResponse = await axios.patch(`http://localhost:8080/orders/update`, {
-    products: productsArray.map(product => ({
-        orderId:orderId,
-        productId: product.id,
-        price: product.price,
-        quantity: product.quantity,
-        name: product.name,
-        total: product.quantity*product.price
-
-    }))
-}, {
-    params:{ userInfo: sessionId},
-    withCredentials: true // Ensure cookies are sent with the request for sessions
-});
-console.log('Patch successful:', patchResponse.data);
-
-        }
-    } catch (error) {
-        const sessionId = Cookies.get('session_id');
-        console.log(Cookies.get('session_id'));
-
-        if (error.response && error.response.status === 404) {
-            const currentDate = new Date();
-            const formattedDate = currentDate.toISOString().split('T')[0];
-            const anotherResponse = await axios.post(`http://localhost:8080/orders/create`, {
-                headers: {"Content-Type": "application/json;charset=UTF-8"},
-                userId: Cookies.get('userId'), // Ensure 'userId' is correctly defined or fetched
-                productDto: productsArray.map((product) => ({
-                    orderdId: null,
-                    productId: product.id,
-                    price: product.price,
-                    quantity: product.quantity,
-                    name: product.name,
-                    total: product.quantity*product.price
-                })), 
-                content: "",
-                date: formattedDate,
-                userInfo: sessionId,
-                withCredentials: true 
+            // Simulate checking for an existing order
+            const response = await axios.get(`http://localhost:8080/orders/exist`, {
+                params: { sessionId: sessionId },
+                headers: {
+                    "Content-Type": "application/json;charset=UTF-8"
+                },
+                withCredentials: true
             });
-            console.log('Handled 404, new data:', anotherResponse.data);
-        } else {
-            console.error('Error in request:', error);
+            orderId = response.data.orderId;
+            console.log('The order id is:', orderId);
+
+            if (response.status === 200) {
+                // Assuming Cookies.get('session_id') retrieves the current session ID stored in cookies
+                response
+                const sessionId = Cookies.get('session_id');
+                console.log(sessionId);
+                console.log(product);
+                const patchResponse = await axios.patch(`http://localhost:8080/orders/update`, {
+                   
+                        orderId: orderId,
+                        productId: product.id,
+                        price: product.price,
+                        quantity: product.quantity,
+                        name: product.name,
+                        total: product.quantity * product.price
+
+            
+                }, {
+                    params: { userInfo: sessionId },
+                    withCredentials: true // Ensure cookies are sent with the request for sessions
+                });
+                console.log('Patch successful:', patchResponse.data);
+
+            }
+        } catch (error) {
+            const sessionId = Cookies.get('session_id');
+            console.log(Cookies.get('session_id'));
+
+            if (error.response && error.response.status === 404) {
+                const currentDate = new Date();
+                const formattedDate = currentDate.toISOString().split('T')[0];
+                let product = products[products.length - 1];
+                const anotherResponse = await axios.post(`http://localhost:8080/orders/create`, {
+                    headers: { "Content-Type": "application/json" },
+                    userId: Cookies.get('userId'), // Ensure 'userId' is correctly defined or fetched
+                    OrderProductsDto:{
+                        orderdId: null,
+                        productId: product.id,
+                        price: product.price,
+                        quantity: product.quantity,
+                        name: product.name,
+                        total: product.quantity * product.price
+                    },
+                    content: "",
+                    date: formattedDate,
+                    userInfo: sessionId,
+                    withCredentials: true
+                });
+                console.log('Handled 404, new data:', anotherResponse.data);
+            } else {
+                console.error('Error in request:', error);
+            }
         }
-    }
     };
 
     return (
