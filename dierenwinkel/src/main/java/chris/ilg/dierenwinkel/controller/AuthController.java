@@ -27,6 +27,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
@@ -62,7 +63,16 @@ public class AuthController {
     @Autowired
     private AuthenticationSuccessHandler successHandler;
 
+@Autowired
+private LogoutSuccessHandler logoutSuccessHandler;
 
+    @PostMapping("/logout")
+    public String handleCustomLogoutLogic(HttpServletRequest request, HttpServletResponse response) {
+        // Custom logic here
+    logger.info("inside logout controller");
+        // Delegate to Spring Security for actual logout processing
+        return "redirect:/logout-successful";  // Redirect to a custom page after logout
+    }
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request,HttpServletResponse response) {
 
@@ -135,7 +145,22 @@ public class AuthController {
     }
 
 
+   // SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
 
+    @PostMapping("/signout")
+    public ResponseEntity<String> performLogout(Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
+        try {
+            logoutSuccessHandler.onLogoutSuccess(request, response, authentication);
+            return ResponseEntity.ok("Logout successful!");
+        } catch (ServletException e) {
+            logger.error("Error during post-authentication: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Logout processing error");
+        }
+        catch (IOException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Logout processing IOException error");
+
+        }
+    }
 
 
 }

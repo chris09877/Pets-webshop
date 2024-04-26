@@ -32,6 +32,7 @@ import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.csrf.*;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
@@ -78,7 +79,6 @@ public class SecurityConfig   {
                         authorize.requestMatchers("http://localhost:*").permitAll()
                                 .requestMatchers("http://localhost:5713/*").permitAll()
                                 .requestMatchers("http://localhost:5713/validate").authenticated()
-                                //.requestMatchers("/admin").hasRole("ADMIN")
 
                 ).formLogin(
                         form -> form
@@ -87,22 +87,55 @@ public class SecurityConfig   {
                                 //.defaultSuccessUrl("http://localhost:5713/catalog")
                                 .successHandler(successfulLoginHandler())
                                 .permitAll()
-
                 ).logout(
                         logout -> logout
-                                .logoutRequestMatcher(new AntPathRequestMatcher("/login?logout"))
+                                .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST"))
                                 .permitAll()
-                                .logoutSuccessUrl("http://localhost:5713/") // Specify the URL after logout
+                                .logoutSuccessHandler(successfulLogoutHandler())  // Correctly set the logout success handler
                                 .invalidateHttpSession(true) // Invalidate the HTTP session on logout
-                                .deleteCookies("JSESSIONID")
+                                .deleteCookies("JSESSIONID")  // Optionally delete cookies on logout
                 )
+
+//                ).logout(
+//                        logout -> logout
+//                               .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST"))
+//                                .permitAll()
+//                                //.logoutSuccessUrl("http://localhost:5713/") // Specify the URL after logout
+////                                .invalidateHttpSession(true) // Invalidate the HTTP session on logout
+////                                .deleteCookies("JSESSIONID")
+//
+//                                /*
+//                                .logoutSuccessHandler(new LogoutSuccessHandler() {
+//                                    @Override
+//                                    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+////                                        // custom logic here
+////                                        response.sendRedirect("/");
+//                                         //Invalidate session and cookies (as you already have)
+//
+//                                        // Set response status and content type (e.g., JSON)
+//                                        response.setStatus(HttpServletResponse.SC_OK);
+//                                        response.setContentType("application/json");
+//
+//                                        // Build your logout response message (e.g., in JSON format)
+//                                        String logoutResponse = "{\"message\": \"Logout successful!\"}";
+//
+//                                        // Write the response message to the client
+//                                        response.getWriter().write(logoutResponse);
+//                                        //response.sendRedirect("/?logout"); // Redirect to root with logout confirmation
+//
+//                                    }
+//                                })*/
+//                                .logoutSuccessUrl(successfulLogoutHandler())
+//                                .invalidateHttpSession(true) // Invalidate the HTTP session on logout
+//                                .deleteCookies("JSESSIONID")
+//                )
 
                 .sessionManagement( sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)  // Match application.properties setting
                         .sessionAuthenticationStrategy(new CustomSessionAuthentication())
-                        .invalidSessionUrl("/login") // Redirect to login if the session is invalid
+                        .invalidSessionUrl("http://localhost:5713/login") // Redirect to login if the session is invalid
                         .maximumSessions(1) // Allow only one session per user
-                        .expiredUrl("/login?expired") // Redirect to login if the session expires
+                        .expiredUrl("http://localhost:5713/login?expired") // Redirect to login if the session expires
                 );
 
     }
@@ -146,6 +179,53 @@ public class SecurityConfig   {
             }
         };
     }
+
+//    @Bean
+//    public LogoutSuccessHandler successfulLogoutHandler() {
+//        return new LogoutSuccessHandler() {
+//            @Override
+//            public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+//                // Invalidate the current session to remove the session ID
+//                HttpSession session = request.getSession(false); // Get the session if it exists
+//                if (session != null) {
+//                    session.invalidate(); // Invalidate session to clear session data
+//                }
+//
+//                // Log for debugging, if necessary
+//                logger.info("Session invalidated successfully on logout.");
+//
+//                // Set the response status to SC_OK (200)
+//                response.setStatus(HttpServletResponse.SC_OK);
+//                response.encodeRedirectURL("http://localhost:5713/login");
+//            }
+//        };
+//    }
+
+    @Bean
+    public LogoutSuccessHandler successfulLogoutHandler() {
+        return new LogoutSuccessHandler() {
+            @Override
+            public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+                // Invalidate the current session
+                HttpSession session = request.getSession(false);
+                String valueSession = request.getSession().getId();
+                if (session != null) {
+                    session.invalidate();
+                }
+
+                logger.info("Session invalidated successfully on logout. Value of session id: " + valueSession);
+
+                // Choose between setting the status or performing a redirect:
+
+                // Option 1: Set status code to 200 (OK)
+                response.setStatus(HttpServletResponse.SC_OK);
+
+                // Option 2: Redirect to login page (replace with your actual URL)
+                // response.sendRedirect("http://localhost:5713/login");
+            }
+        };
+    }
+
 
 }
 
