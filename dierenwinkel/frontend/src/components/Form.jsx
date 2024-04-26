@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-
+import Cookies from 'js-cookie';
 const Form = () => {
-  // const storedUserId = localStorage.getItem('userId');
+
 
   const [formData, setFormData] = useState({
     date: '',
     content: '',
     userInfo: '',
     user_id: '',
-    
+
   });
 
   const handleChange = (e) => {
@@ -34,16 +34,23 @@ const Form = () => {
     }
 
     try {
-      const response = await axios.patch(`${config.apiUrl}/orders`, formData);
+      const response = await axios.patch(`http://localhost:8080/orders/finalize`,
+        {
+          "content": formData.name,
+          "id": formData.phone,
+          "userInfo": formData.address,
+          "date": formData.order_date
+        },
+       { withCredentials: true}
+
+      );
       console.log('Order updated:', response.data);
-      // console.log(`${config.apiUrl}/orders/checkout/${storedUserId}`);
       alert('Order proceed');
-      //localStorage.setItem('userId', null);
-      localStorage.clear();
+      // Cookies.remove("session_id");
+      // Cookies.remove("userId");
       window.location.href = '/';
     } catch (error) {
       console.error('Error updating order:', error);
-      // Handle error cases
     }
   };
 
@@ -98,9 +105,7 @@ const Form = () => {
           className="p-2 border rounded-md"
         />
       </div>
-      <input type="hidden" name='user' value={""} />
-      <button type="submit">Submit</button>
-    </form>
+      <button type="submit" className="bg-red-500 text-white text-lg px-4 py-2 mx-auto block">Submit</button>    </form>
   );
 };
 

@@ -3,10 +3,12 @@ package chris.ilg.dierenwinkel.controller;
 import chris.ilg.dierenwinkel.model.OrderProduct;
 import chris.ilg.dierenwinkel.model.Orders;
 import chris.ilg.dierenwinkel.model.Product;
+import chris.ilg.dierenwinkel.repository.OrderRepo;
 import chris.ilg.dierenwinkel.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -36,6 +38,8 @@ public class OrderController {
     @Autowired
     private ProductServiceImpl productService;
 
+    @Autowired
+    private OrderRepo orderRepo;
     @PostMapping("/create")
     public ResponseEntity<?> add(@RequestBody OrdersDto ordersDto, HttpServletRequest request) {
 //        HttpSession session = request.getSession(true); // Get existing session if it exists
@@ -58,13 +62,19 @@ public class OrderController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Orders> get(@PathVariable int id) {
-        logger.info("FIND ORDER WITH ID:", id);
+    public ResponseEntity<Orders> get(@PathVariable int id, HttpServletRequest request) {
+        String sessionId = request.getSession().getId();
+        Orders orderWithSession = orderService.getOrderByUserInfo(sessionId);
+        if (orderWithSession == null){
+            logger.info("Order with user info: " + sessionId + " NOT FOUND");
+            return ResponseEntity.notFound().build(); // Return 404 Not Found response if user not found
+        }
 
-        Orders order = orderService.getOrderById(id);
-        if (order != null) {
-            return ResponseEntity.ok().body(order); // Return 200 OK response with the user entity
+        if (orderWithSession.getId() == id){
+            logger.info("FOUND ORDER WITH ID:", id);
+            return ResponseEntity.ok().body(orderWithSession); // Return 200 OK response with the user entity
         } else {
+            logger.info("NO USER FOUND WITH MATCHING USERINFO: " + sessionId +  " AND ORDER WITH ID:", id);
             return ResponseEntity.notFound().build(); // Return 404 Not Found response if user not found
         }
     }
@@ -98,6 +108,19 @@ public class OrderController {
         return ResponseEntity.ok().body(listOPD);
     }
 
+    @PatchMapping("/finalize")
+    public ResponseEntity<?> finalizeOrder(HttpServletRequest request,@RequestBody OrdersDto orderDto) {
+        logger.info("Finding the order with session ID: " + request.getSession().getId());
+        Orders updateOrder = orderService.getOrderByUserInfo(request.getSession().getId());
+        if (updateOrder == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No order found with this session id in the user info field:" +request.getSession().getId());
+        }
+        updateOrder.setContent("Name: "+ orderDto.getContent()+ "\nPhone:"+ orderDto.getId()+ "\nAddress:" + orderDto.getUserInfo());
+        updateOrder.setDate(orderDto.getDate());
+        orderRepo.save(updateOrder);
+        return ResponseEntity.ok().body("ORDER FINALIZED");
+    }
+
 
     @GetMapping("/find")
     public ResponseEntity<List<OrderProductDto>> getOrderByUserId(@RequestParam Integer userId, HttpServletRequest request) {
@@ -114,7 +137,7 @@ public class OrderController {
 
         // Filter orders that match the session user info
         List<Orders> filteredOrders = orderList.stream()
-                .filter(order -> order.getUserInfo().equals("exampleSessionId")) //(currentUserInfo))
+                .filter(order -> order.getUserInfo().equals(currentUserInfo))
                 .collect(Collectors.toList());
 
         if (filteredOrders.isEmpty()) {
