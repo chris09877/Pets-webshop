@@ -10,6 +10,7 @@ import java.util.List;
 @Repository
 public interface OrderProductRepo extends JpaRepository<OrderProduct, Integer> {
 
-     OrderProduct save(OrderProduct op);
-     List<OrderProduct> findAllByOrderId(int orderId);
+    OrderProduct save(OrderProduct op);
+
+    List<OrderProduct> findAllByOrderId(int orderId);
 }

@@ -45,15 +45,17 @@ import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig   {
+public class SecurityConfig {
     private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
 
     @Autowired
     private UserRepo userRepo;
+
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("http://localhost:5173/**").allowedMethods("*");
     }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -62,17 +64,19 @@ public class SecurityConfig   {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowedOrigins(Collections.singletonList("http://localhost:5173/")); // Replace with your frontend origin
                     config.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "PATCH", "DELETE"));
-                    config.setAllowedHeaders(Arrays.asList("Content-Type", "POST","Authorization")); // Adjust as needed
+                    config.setAllowedHeaders(Arrays.asList("Content-Type", "POST", "Authorization")); // Adjust as needed
                     config.addExposedHeader("Set-Cookie");
-                    config.addExposedHeader( "Cookie");
+                    config.addExposedHeader("Cookie");
                     config.setExposedHeaders(Arrays.asList("Set-Cookie", "Session-ID", "User-ID", "Cookie"));
                     config.setAllowCredentials(true);
-                    return config;}))
+                    return config;
+                }))
 
                 .csrf((csrf) -> csrf.disable());
 
         return http.build();
     }
+
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((authorize) ->
@@ -95,42 +99,7 @@ public class SecurityConfig   {
                                 .invalidateHttpSession(true) // Invalidate the HTTP session on logout
                                 .deleteCookies("JSESSIONID")  // Optionally delete cookies on logout
                 )
-
-//                ).logout(
-//                        logout -> logout
-//                               .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST"))
-//                                .permitAll()
-//                                //.logoutSuccessUrl("http://localhost:5713/") // Specify the URL after logout
-////                                .invalidateHttpSession(true) // Invalidate the HTTP session on logout
-////                                .deleteCookies("JSESSIONID")
-//
-//                                /*
-//                                .logoutSuccessHandler(new LogoutSuccessHandler() {
-//                                    @Override
-//                                    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-////                                        // custom logic here
-////                                        response.sendRedirect("/");
-//                                         //Invalidate session and cookies (as you already have)
-//
-//                                        // Set response status and content type (e.g., JSON)
-//                                        response.setStatus(HttpServletResponse.SC_OK);
-//                                        response.setContentType("application/json");
-//
-//                                        // Build your logout response message (e.g., in JSON format)
-//                                        String logoutResponse = "{\"message\": \"Logout successful!\"}";
-//
-//                                        // Write the response message to the client
-//                                        response.getWriter().write(logoutResponse);
-//                                        //response.sendRedirect("/?logout"); // Redirect to root with logout confirmation
-//
-//                                    }
-//                                })*/
-//                                .logoutSuccessUrl(successfulLogoutHandler())
-//                                .invalidateHttpSession(true) // Invalidate the HTTP session on logout
-//                                .deleteCookies("JSESSIONID")
-//                )
-
-                .sessionManagement( sessionManagement -> sessionManagement
+                .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)  // Match application.properties setting
                         .sessionAuthenticationStrategy(new CustomSessionAuthentication())
                         .invalidSessionUrl("http://localhost:5713/login") // Redirect to login if the session is invalid
@@ -180,27 +149,6 @@ public class SecurityConfig   {
         };
     }
 
-//    @Bean
-//    public LogoutSuccessHandler successfulLogoutHandler() {
-//        return new LogoutSuccessHandler() {
-//            @Override
-//            public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-//                // Invalidate the current session to remove the session ID
-//                HttpSession session = request.getSession(false); // Get the session if it exists
-//                if (session != null) {
-//                    session.invalidate(); // Invalidate session to clear session data
-//                }
-//
-//                // Log for debugging, if necessary
-//                logger.info("Session invalidated successfully on logout.");
-//
-//                // Set the response status to SC_OK (200)
-//                response.setStatus(HttpServletResponse.SC_OK);
-//                response.encodeRedirectURL("http://localhost:5713/login");
-//            }
-//        };
-//    }
-
     @Bean
     public LogoutSuccessHandler successfulLogoutHandler() {
         return new LogoutSuccessHandler() {
@@ -215,13 +163,7 @@ public class SecurityConfig   {
 
                 logger.info("Session invalidated successfully on logout. Value of session id: " + valueSession);
 
-                // Choose between setting the status or performing a redirect:
-
-                // Option 1: Set status code to 200 (OK)
                 response.setStatus(HttpServletResponse.SC_OK);
-
-                // Option 2: Redirect to login page (replace with your actual URL)
-                // response.sendRedirect("http://localhost:5713/login");
             }
         };
     }

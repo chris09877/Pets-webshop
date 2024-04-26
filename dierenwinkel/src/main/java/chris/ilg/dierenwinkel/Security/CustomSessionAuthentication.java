@@ -10,7 +10,6 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 public class CustomSessionAuthentication implements SessionAuthenticationStrategy {
 
 
-
     @Override
     public void onAuthentication(Authentication authentication, HttpServletRequest request, HttpServletResponse response) throws SessionAuthenticationException {
         HttpSession session = request.getSession(false);  // Don't create session if not existing

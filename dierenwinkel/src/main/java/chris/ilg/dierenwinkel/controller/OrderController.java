@@ -17,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,34 +34,33 @@ public class OrderController {
 
     @Autowired
     private OrderProductServiceImpl orderProductServiceImpl;
-@PostMapping( "/create")
-public ResponseEntity<?> add(@RequestBody OrdersDto ordersDto, HttpServletRequest request) {
-    HttpSession session = request.getSession(true); // Get existing session if it exists
-    if (session == null) {
-        //logger.info("No session found, user is not authenticated. Session id:" + session.getId());
-        return new ResponseEntity<>("User is not authenticated", HttpStatus.UNAUTHORIZED);
+
+    @PostMapping("/create")
+    public ResponseEntity<?> add(@RequestBody OrdersDto ordersDto, HttpServletRequest request) {
+        HttpSession session = request.getSession(true); // Get existing session if it exists
+        if (session == null) {
+            //logger.info("No session found, user is not authenticated. Session id:" + session.getId());
+            return new ResponseEntity<>("User is not authenticated", HttpStatus.UNAUTHORIZED);
+        }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || /*authentication instanceof AnonymousAuthenticationToken ||*/ !authentication.isAuthenticated()) {
+            logger.info("User is not properly authenticated, session ID is null");
+            return new ResponseEntity<>("User is not authenticated", HttpStatus.UNAUTHORIZED);
+        }
+
+        logger.info("Session ID: {}", request.getSession().getId());
+        logger.info("Received new order dto A ZBEEEEEE: {}", ordersDto);
+        orderService.saveOrder(ordersDto);
+        return ResponseEntity.ok("New order is added");
     }
-
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    if (authentication == null || /*authentication instanceof AnonymousAuthenticationToken ||*/ !authentication.isAuthenticated()) {
-        logger.info("User is not properly authenticated, session ID is null");
-        return new ResponseEntity<>("User is not authenticated", HttpStatus.UNAUTHORIZED);
-    }
-
-    logger.info("Session ID: {}", request.getSession().getId());
-    logger.info("Received new order dto A ZBEEEEEE: {}", ordersDto);
-    orderService.saveOrder(ordersDto);
-    return ResponseEntity.ok("New order is added");
-}
-
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Orders> get (@PathVariable int id)
-    {
+    public ResponseEntity<Orders> get(@PathVariable int id) {
         logger.info("FIND ORDER WITH ID:", id);
 
-        Orders order  = orderService.getOrderById(id);
+        Orders order = orderService.getOrderById(id);
         if (order != null) {
             return ResponseEntity.ok().body(order); // Return 200 OK response with the user entity
         } else {
@@ -82,52 +82,55 @@ public ResponseEntity<?> add(@RequestBody OrdersDto ordersDto, HttpServletReques
     }
 
     @PatchMapping("/update")
-    public ResponseEntity <?> updateOrder(HttpServletRequest request, @RequestParam String userInfo, @RequestBody OrderProductDto orderProductDto) {
+    public ResponseEntity<?> updateOrder(HttpServletRequest request, @RequestParam String userInfo, @RequestBody OrderProductDto orderProductDto) {
         logger.info("Finding the order with session ID: " + userInfo);
         Orders updateOrder = orderService.getOrderByUserInfo(userInfo);
-        if (updateOrder == null){return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No order found with this session id in the user info field:" + userInfo);}
+        if (updateOrder == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No order found with this session id in the user info field:" + userInfo);
+        }
         OrderProduct op = orderProductServiceImpl.create(orderProductDto);
-        if (op == null){return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong during the creation of the order product:");}
+        if (op == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong during the creation of the order product:");
+        }
         List<OrderProduct> listOP = orderProductServiceImpl.getAllByOrderId(updateOrder.getId());
         return ResponseEntity.ok().body(listOP);
     }
 
 
-@GetMapping("/find")
-public ResponseEntity<List<Orders>> getOrderByUserId(@RequestParam Integer userId, HttpServletRequest request) {
-    logger.info("Getting the orders for user id: {}", userId);
-    List<Orders> orderList = orderService.getAllOrdersByUserId(userId);
+    @GetMapping("/find")
+    public ResponseEntity<List<Orders>> getOrderByUserId(@RequestParam Integer userId, HttpServletRequest request) {
+        logger.info("Getting the orders for user id: {}", userId);
+        List<Orders> orderList = orderService.getAllOrdersByUserId(userId);
 
-    if (orderList == null || orderList.isEmpty()) {
-        logger.info("No orders found for user id {}", userId);
-        return ResponseEntity.notFound().build();
+        if (orderList == null || orderList.isEmpty()) {
+            logger.info("No orders found for user id {}", userId);
+            return ResponseEntity.notFound().build();
+        }
+
+        // Assuming UserInfo is something you can retrieve from the session (this needs to be correctly implemented)
+        String currentUserInfo = request.getSession().getId();  // Example: how you might get user info from session
+
+        // Filter orders that match the session user info
+        List<Orders> filteredOrders = orderList.stream()
+                .filter(order -> order.getUserInfo().equals(currentUserInfo))
+                .collect(Collectors.toList());
+
+        if (filteredOrders.isEmpty()) {
+            logger.info("No order found with the matching user info ", currentUserInfo);
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(filteredOrders);
     }
-
-    // Assuming UserInfo is something you can retrieve from the session (this needs to be correctly implemented)
-    String currentUserInfo = request.getSession().getId();  // Example: how you might get user info from session
-
-    // Filter orders that match the session user info
-    List<Orders> filteredOrders = orderList.stream()
-            .filter(order -> order.getUserInfo().equals(currentUserInfo))
-            .collect(Collectors.toList());
-
-    if (filteredOrders.isEmpty()) {
-        logger.info("No order found with the matching user info ", currentUserInfo);
-        return ResponseEntity.notFound().build();
-    }
-
-    return ResponseEntity.ok(filteredOrders);
-}
 
 
     @GetMapping("/exist")
     public ResponseEntity<?> getOrderByUserInfo(@RequestParam String sessionId) {
         logger.info("Getting the order with user info: " + sessionId);
         Orders order = orderService.getOrderByUserInfo(sessionId);
-        if (order != null ){
+        if (order != null) {
             return ResponseEntity.ok().body(Collections.singletonMap("orderId", order.getId()));
-        }
-        else {
+        } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }

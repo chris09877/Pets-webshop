@@ -17,7 +17,7 @@ public class ProductDto {
 
     public ProductDto(Product p) {
         this.id = p.getId();
-        this.name =p.getName();
+        this.name = p.getName();
         this.description = p.getDescription();
         this.price = p.getPrice();
         this.quantity = p.getQuantity();
@@ -26,13 +26,12 @@ public class ProductDto {
 
     public ProductDto(Product p, Orders o) {
         this.id = p.getId();
-        this.name =p.getName();
+        this.name = p.getName();
         this.description = p.getDescription();
         this.price = p.getPrice();
         this.quantity = p.getQuantity();
         this.categoryId = p.getCategories().getValue();
     }
-
 
 
     public int getId() {

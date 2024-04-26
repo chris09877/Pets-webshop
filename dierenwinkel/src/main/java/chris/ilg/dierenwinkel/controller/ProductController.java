@@ -22,7 +22,7 @@ public class ProductController {
 
 
     @PostMapping("/add")
-    public String add(@RequestBody Product p){
+    public String add(@RequestBody Product p) {
         logger.info("Received new product A ZBEEEEEE: {}", p);
 
         productService.saveProduct(p);
@@ -30,11 +30,10 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> get (@PathVariable int id)
-    {
+    public ResponseEntity<Product> get(@PathVariable int id) {
         logger.info("FIND PRODUCT WITH ID:", id);
 
-        Product p  = productService.getProductById(id);
+        Product p = productService.getProductById(id);
         if (p != null) {
             return ResponseEntity.ok().body(p); // Return 200 OK response with the user entity
         } else {
@@ -60,8 +59,7 @@ public class ProductController {
     }
 
     @GetMapping("/filter/{category}")
-    public ResponseEntity<ArrayList<Product>> getByCategory (@PathVariable String category)
-    {
+    public ResponseEntity<ArrayList<Product>> getByCategory(@PathVariable String category) {
         logger.info("FIND PRODUCT WITH CATEGORY: " + category);
         ArrayList<Product> productOfCategory = productService.getProductsByCategory(category);
 

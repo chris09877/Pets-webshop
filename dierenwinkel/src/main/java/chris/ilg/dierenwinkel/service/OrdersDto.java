@@ -22,7 +22,7 @@ public class OrdersDto {
     public OrdersDto() {
     }
 
-    public OrdersDto(Orders o,OrderProduct op) {
+    public OrdersDto(Orders o, OrderProduct op) {
         this.id = o.getId();
         this.userId = o.getUser().getId();
         //this.products = o.getProducts();
@@ -90,7 +90,7 @@ public class OrdersDto {
         this.products = products;
     }
 
-    public  class ProductDto2 {
+    public class ProductDto2 {
         private int orderId, productId;
         private double price;
         private int quantity;

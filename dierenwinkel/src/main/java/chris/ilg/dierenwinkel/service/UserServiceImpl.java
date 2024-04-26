@@ -7,13 +7,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     @Autowired
-    private  UserRepo userRepo;
-    //private  static UserRepo userRepo2;
+    private UserRepo userRepo;
+
     @Autowired
-    private  PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public User saveUser(UserDto userDto) {
@@ -26,9 +26,6 @@ public class UserServiceImpl implements UserService{
     public User getUserById(int id) {
         return userRepo.getById(id);
     }
-//    public static  User getUserByID(int id) {
-//        return userRepo2.getById(id);
-//    }
 
     @Override
     public User getUserByMail(String mail) {

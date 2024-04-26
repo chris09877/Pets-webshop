@@ -20,7 +20,8 @@ import java.util.Set;
 public class Orders {
 
 
-    public Orders() {}
+    public Orders() {
+    }
 
     public Orders(OrdersDto ordersDto, User user/*, OrderProduct op*/) {
         this.content = ordersDto.getContent();
@@ -32,7 +33,6 @@ public class Orders {
     }
 
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -41,15 +41,15 @@ public class Orders {
     @JoinColumn(name = "user_id", nullable = true)
     private User user;
 
-//    @ManyToMany
+    //    @ManyToMany
 //    @JoinTable(
 //            name = "order_product",
 //            joinColumns = @JoinColumn(name = "order_id"),
 //            inverseJoinColumns = @JoinColumn(name = "product_id"))
 //   //@JsonManagedReference
 //    private Set<Product> products = new HashSet<>();
-@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-private Set<OrderProduct> orderProducts = new HashSet<>();
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<OrderProduct> orderProducts = new HashSet<>();
     @Column(nullable = true)
     //@ElementCollection
     private String content;
@@ -101,13 +101,6 @@ private Set<OrderProduct> orderProducts = new HashSet<>();
         this.user = user;
     }
 
-//    public Set<Product> getProducts() {
-//        return products;
-//    }
-//
-//    public void setProducts(Set<Product> products) {
-//        this.products = products;
-//    }
 
     public Set<OrderProduct> getOrderProducts() {
         return orderProducts;

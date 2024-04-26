@@ -16,7 +16,8 @@ public class OrderProduct {
     }
 
     public OrderProduct(OrderProductDto opd) {
-        this.order =  new OrderServiceImpl().getOrderById(opd.getOrderId());;
+        this.order = new OrderServiceImpl().getOrderById(opd.getOrderId());
+        ;
         this.product = new ProductServiceImpl().getProductById(opd.getProductId());
         this.quantity = opd.getQuantity();
         this.price = opd.getPrice();
@@ -40,12 +41,12 @@ public class OrderProduct {
     private int quantity;
 
     @Column(nullable = false)
-    private double  price, total;
+    private double price, total;
 
     @Column(nullable = false)
     private String name;
 
-    private int productId,orderId;
+    private int productId, orderId;
 
     public void setTotal(double total) {
         this.total = total;

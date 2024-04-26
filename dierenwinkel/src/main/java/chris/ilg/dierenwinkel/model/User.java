@@ -22,9 +22,9 @@ public class User {
     private int id;
 
     @Column(nullable = false, length = 255)
-    private String firstname,lastname, address;
+    private String firstname, lastname, address;
     @Column(nullable = false, length = 255)
-    private String postcode, number,password;
+    private String postcode, number, password;
     @Column(nullable = false)
     private Date birthdate;
     @Column(nullable = false, length = 40, unique = true)
@@ -35,7 +35,7 @@ public class User {
     private List<Orders> orders;
 
 
-    public User(UserDto userDto, PasswordEncoder passwordEncoder){
+    public User(UserDto userDto, PasswordEncoder passwordEncoder) {
         this.address = userDto.getAddress();
         this.birthdate = userDto.getBirthdate();
         this.mail = userDto.getMail();
@@ -51,7 +51,8 @@ public class User {
 
     }
 
-    public User() {    }
+    public User() {
+    }
 
     public String getPhone() {
         return phone;

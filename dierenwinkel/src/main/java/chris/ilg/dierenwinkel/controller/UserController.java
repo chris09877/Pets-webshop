@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -17,18 +18,18 @@ public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
     @PostMapping("/add")
-    public String add (@RequestBody UserDto userDto){
+    public String add(@RequestBody UserDto userDto) {
         logger.info("Received new user A ZBEEEEEE: {}", userDto);
 
         userService.saveUser(userDto);
         return "new user added";
     }
+
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> get (@PathVariable int id)
-    {
+    public ResponseEntity<UserDto> get(@PathVariable int id) {
         logger.info("FIND USER WITH ID:", id);
 
-        User user  = userService.getUserById(id);
+        User user = userService.getUserById(id);
         if (user != null) {
             UserDto userDto = new UserDto(user);
             return ResponseEntity.ok().body(userDto); // Return 200 OK response with the user entity

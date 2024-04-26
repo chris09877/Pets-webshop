@@ -63,18 +63,19 @@ public class AuthController {
     @Autowired
     private AuthenticationSuccessHandler successHandler;
 
-@Autowired
-private LogoutSuccessHandler logoutSuccessHandler;
+    @Autowired
+    private LogoutSuccessHandler logoutSuccessHandler;
 
     @PostMapping("/logout")
     public String handleCustomLogoutLogic(HttpServletRequest request, HttpServletResponse response) {
         // Custom logic here
-    logger.info("inside logout controller");
+        logger.info("inside logout controller");
         // Delegate to Spring Security for actual logout processing
         return "redirect:/logout-successful";  // Redirect to a custom page after logout
     }
+
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request,HttpServletResponse response) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response) {
 
         try {
             CustomUserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getMail());
@@ -86,13 +87,13 @@ private LogoutSuccessHandler logoutSuccessHandler;
                 try {
                     // Use autowired success handler
                     successHandler.onAuthenticationSuccess(request, response, authenticated);
-                }catch (ServletException e) {
+                } catch (ServletException e) {
                     logger.error("Error during post-authentication: {}", e.getMessage(), e);
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Login processing error");
                 }
                 int userId = userDetails.getId(); // Assuming getId() is implemented to return user ID
                 response.setHeader("User-ID", String.valueOf(userId));
-                response.setHeader("session-id",request.getSession().getId());
+                response.setHeader("session-id", request.getSession().getId());
 
                 return ResponseEntity.ok("Login successful");
             } else {
@@ -103,31 +104,6 @@ private LogoutSuccessHandler logoutSuccessHandler;
             logger.error("Authentication failed", e);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed");
         }
-  //      try {
-//            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-//                    loginRequest.getMail(), loginRequest.getPwd());
-//
-//            // Authenticate the user
-//            Authentication authentication = authenticationManager.authenticate(authToken);
-//
-//            // Check if authentication was successful
-//            if (authentication.isAuthenticated()) {
-//                SecurityContextHolder.getContext().setAuthentication(authentication);  // Update SecurityContextHolder
-//
-//                // Redirect or return successful response
-//                HttpSession session = request.getSession(true);
-//                session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
-//            CustomUserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getMail());
-//                int userId = userDetails.getId(); // Assuming getId() is implemented to return user ID
-//                response.setHeader("User-ID", String.valueOf(userId));
-//                response.setHeader("session-id",session.getId());
-//                return ResponseEntity.ok().body("Authenticated successfully");
-//            } else {
-//                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed");
-//            }
-//        } catch (AuthenticationException ex) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication error");
-//        }
     }
 
     @PostMapping("/register")
@@ -145,7 +121,7 @@ private LogoutSuccessHandler logoutSuccessHandler;
     }
 
 
-   // SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
+    // SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
 
     @PostMapping("/signout")
     public ResponseEntity<String> performLogout(Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
@@ -155,8 +131,7 @@ private LogoutSuccessHandler logoutSuccessHandler;
         } catch (ServletException e) {
             logger.error("Error during post-authentication: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Logout processing error");
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Logout processing IOException error");
 
         }
