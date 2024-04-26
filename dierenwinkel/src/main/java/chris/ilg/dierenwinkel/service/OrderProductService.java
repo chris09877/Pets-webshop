@@ -10,5 +10,5 @@ public interface OrderProductService {
 
     public OrderProduct create(OrderProductDto opd, Product p, Orders o);
 
-    public List<OrderProduct> getAllByOrderId(int id);
+    public List<OrderProductDto> getAllByOrderId(int id);
 }

@@ -38,12 +38,17 @@ public class OrderProductServiceImpl implements OrderProductService {
     }
 
     @Override
-    public List<OrderProduct> getAllByOrderId(int id) {
+    public List<OrderProductDto> getAllByOrderId(int id) {
         List<OrderProduct> listOP = orderProductRepo.findAllByOrderId(id);
         if (listOP.isEmpty()) {
             System.out.println("No order products found for this id:" + id);
         }
+        List<OrderProductDto> listOPD = new ArrayList<>();
+        listOP.forEach(orderProduct -> {
+            OrderProductDto opd = new OrderProductDto(orderProduct.getOrder().getId(),orderProduct.getProduct().getId(),orderProduct.getQuantity(),orderProduct.getPrice(),orderProduct.getTotal(),orderProduct.getName());
+            listOPD.add(opd);
+        });
 
-        return listOP;
+        return listOPD;
     }
 }

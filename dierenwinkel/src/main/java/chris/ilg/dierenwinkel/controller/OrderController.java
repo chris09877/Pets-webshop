@@ -94,13 +94,13 @@ public class OrderController {
         if (op == null) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong during the creation of the order product:");
         }
-        List<OrderProduct> listOP = orderProductServiceImpl.getAllByOrderId(updateOrder.getId());
-        return ResponseEntity.ok().body(listOP);
+        List<OrderProductDto> listOPD = orderProductServiceImpl.getAllByOrderId(updateOrder.getId());
+        return ResponseEntity.ok().body(listOPD);
     }
 
 
     @GetMapping("/find")
-    public ResponseEntity<List<Orders>> getOrderByUserId(@RequestParam Integer userId, HttpServletRequest request) {
+    public ResponseEntity<List<OrderProductDto>> getOrderByUserId(@RequestParam Integer userId, HttpServletRequest request) {
         logger.info("Getting the orders for user id: {}", userId);
         List<Orders> orderList = orderService.getAllOrdersByUserId(userId);
 
@@ -114,15 +114,19 @@ public class OrderController {
 
         // Filter orders that match the session user info
         List<Orders> filteredOrders = orderList.stream()
-                .filter(order -> order.getUserInfo().equals(currentUserInfo))
+                .filter(order -> order.getUserInfo().equals("exampleSessionId")) //(currentUserInfo))
                 .collect(Collectors.toList());
 
         if (filteredOrders.isEmpty()) {
             logger.info("No order found with the matching user info ", currentUserInfo);
             return ResponseEntity.notFound().build();
+        } else if (filteredOrders.size() > 1) {
+            logger.info("Problem more than one order has be found");
         }
+        Orders filteredOrder = filteredOrders.get(0);
+        List<OrderProductDto> listOPD = orderProductServiceImpl.getAllByOrderId(filteredOrder.getId());
 
-        return ResponseEntity.ok(filteredOrders);
+        return ResponseEntity.ok(listOPD);
     }
 
 
