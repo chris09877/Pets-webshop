@@ -1,19 +1,15 @@
 import React, { useState, useEffect } from 'react';
-// import { useAuth } from './AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-//import config from "../config";
 
 const FormLogin = () => {
-  //const { setAuthInfo } = useAuth();
   const [credentials, setCredentials] = useState({ mail: '', pwd: '' });
   const [allCookies, setAllCookies] = useState({ mail: '', pwd: '' });
 
   const handleLogin = async () => {
     try {
       const response = await axios.post('http://localhost:8080/login', credentials, {
-        // headers: {Cookie: "JESSIONID=" + Cookies.get("session_id")},
         withCredentials: true
       });
       let data = await response.data;
@@ -22,7 +18,7 @@ const FormLogin = () => {
       console.log("SET COOKIE: " + headers['Set-Cookie']);
       console.log("COOKIE: " + headers.get('Cookie'));
 
-console.log(document.cookie);
+      console.log(document.cookie);
       console.log('Login successful:', data);
       console.log("SESSION ID: " + headers.get('session-id'));
       console.log("USER ID: " + headers.get('User-ID'));
@@ -31,7 +27,7 @@ console.log(document.cookie);
       let header_user = headers.get('User-ID');
       Cookies.set('session_id', header_session, { expires: 4 / 24 }); // Expires in 4 hours
       Cookies.set('userId', header_user, { expires: 4 / 24 }); // Expires in 4 hours
-      
+      window.location.href = '/catalog';
     }
 
     catch (error) {
@@ -74,7 +70,6 @@ console.log(document.cookie);
                     onChange={handleChange}
                     className="peer h-10 w-full border-b-2 border-gray-300 text-white focus:outline-none focus:borer-rose-600"
                   />
-                  {/* <label for="email" className="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Email Address</label> */}
                 </div>
                 <div className="relative">
                   <input
@@ -86,7 +81,6 @@ console.log(document.cookie);
                     onChange={handleChange}
                     className="peer h-10 w-full border-b-2 border-gray-300 text-white focus:outline-none focus:borer-rose-600"
                   />
-                  {/* <label for="password" className="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Password</label> */}
                 </div>
                 <div className="relative">
                   <button className="bg-blue-500 text-white rounded-md px-2 py-1">Login</button>
