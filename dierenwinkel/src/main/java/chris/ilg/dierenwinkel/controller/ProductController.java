@@ -59,15 +59,19 @@ public class ProductController {
     }
 
     @GetMapping("/filter/{category}")
-    public ResponseEntity<ArrayList<Product>> getByCategory(@PathVariable String category) {
+    public ResponseEntity<ArrayList<ProductDto>> getByCategory(@PathVariable String category) {
         logger.info("FIND PRODUCT WITH CATEGORY: " + category);
         ArrayList<Product> productOfCategory = productService.getProductsByCategory(category);
+        ArrayList<ProductDto> productOfCategoryDTO = new ArrayList<>();
+        productOfCategory.forEach(product -> {
+            ProductDto p = new ProductDto(product);
+            productOfCategoryDTO.add(p);
+        });
 
-
-        if (productOfCategory != null) {
+        if (productOfCategoryDTO != null) {
             logger.info("amount of product found:" + productOfCategory.size());
 
-            return ResponseEntity.ok().body(productOfCategory); // Return 200 OK response with the user entity
+            return ResponseEntity.ok().body(productOfCategoryDTO); // Return 200 OK response with the user entity
         } else {
             return ResponseEntity.notFound().build(); // Return 404 Not Found response if user not found
         }

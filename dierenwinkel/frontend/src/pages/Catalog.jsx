@@ -155,13 +155,13 @@ const Catalog = () => {
                     {Array.isArray(products) && products.map((product) => (
                         <form key={product.id} onSubmit={(e) => handleSubmit(e)}>
                             <div className="bg-white p-4 shadow-md">
-                                <Link to={`/products/${product.id}`} className="block">
+                               
                                     <h2 className="text-lg font-semibold mb-2">{product.name}</h2>
                                     <img src={`/${product.name}.jpg`} alt={product.name} className="w-full h-40 object-cover mb-2" />
                                     <p className="text-gray-600 mb-2">{product.price}</p>
                                     <p className="text-gray-600 mb-2">{product.categories}</p>
                                     <p className="text-sm text-gray-500 mb-2">{product.description}</p>
-                                </Link>
+                                
                                 <label className="block mb-2">
                                     Quantity:
                                     <input

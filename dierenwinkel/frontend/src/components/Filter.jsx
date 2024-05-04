@@ -9,18 +9,21 @@ const Filter = (props) => {
   const categories = ['all', 'fish', 'dog', 'cat'];
 
   const handleChange = (event) => {
-    setCategory(event.target.value);
+    const newCategory = event.target.value;
+    setCategory(newCategory);
+    fetchProducts(newCategory); 
+
   };
 
-  const fetchProducts = async () => {
+  const fetchProducts = async (currentCategory) => {
     setIsLoading(true); // Set loading state to true
 
     try {
-        console.log(category);
+        console.log(currentCategory);
         let response;
-        if(category !== "all")
+        if(currentCategory !== "all")
         {
-       response = await axios.get(`http://localhost:8080/api/product/filter/${category}`);
+       response = await axios.get(`http://localhost:8080/api/product/filter/${currentCategory}`);
         }
         else
         {
@@ -36,9 +39,9 @@ const Filter = (props) => {
 
   };
 
-  useEffect(() => {
-    fetchProducts();
-  }, [category]);
+  // useEffect(() => {
+  //   fetchProducts('all');
+  // }, []);
 
   return (
     <div>
