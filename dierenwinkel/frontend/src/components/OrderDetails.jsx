@@ -100,7 +100,7 @@ else {
         setTotalSum(total);
       });
     }
-  }, [path]); // Depend on 'path' to re-run this effect when 'path' changes
+  }, [path]); 
   
   return(
     <div className="bg-gray-500 p-4 shadow-md rounded-lg inline-block max-w-full min-w-40 fixed left-3/4">

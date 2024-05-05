@@ -101,7 +101,8 @@ public class SecurityConfig {
                 )
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)  // Match application.properties setting
-                        .sessionAuthenticationStrategy(new CustomSessionAuthentication())
+                        //.sessionAuthenticationStrategy(new CustomSessionAuthentication())
+                        .sessionFixation().newSession() // This ensures a new session is created on authentication
                         .invalidSessionUrl("http://localhost:5713/login") // Redirect to login if the session is invalid
                         .maximumSessions(1) // Allow only one session per user
                         .expiredUrl("http://localhost:5713/login?expired") // Redirect to login if the session expires
