@@ -54,7 +54,9 @@ const OrderDetails = () => {
   const handleOrder = () => {
     window.location.href = '/checkout';
   };
+  const path = window.location.pathname;
 
+  if (path !== '/checkout') {
   return (
     <div className="bg-gray-500 p-4 shadow-md rounded-lg inline-block max-w-full min-w-40 fixed left-3/4">
       <header className="cursor-pointer" onClick={toggleExpansion}>
@@ -88,6 +90,47 @@ const OrderDetails = () => {
       )}
     </div>
   );
+}
+else {
+  useEffect(() => {
+    if (path === '/checkout') {
+      getOrderDetails().then(data => {
+        setProducts(data);
+        const total = data.reduce((acc, product) => acc + product.total, 0);
+        setTotalSum(total);
+      });
+    }
+  }, [path]); // Depend on 'path' to re-run this effect when 'path' changes
+  
+  return(
+    <div className="bg-gray-500 p-4 shadow-md rounded-lg inline-block max-w-full min-w-40 fixed left-3/4">
+      <header className="cursor-pointer" >
+        <h3 className="text-xl font-bold mb-2">Your Order</h3>
+      </header>
+        <div className="mt-4">
+          <p className="text-lg font-semibold">Order Details:</p>
+          {loading && <p>Loading...</p>}
+          {error && <p className="text-red-500">{error}</p>}
+          {products.length > 0 ? (
+            <div className="mt-2">
+              {products.map((product) => (
+                <div key={product.id} className="mb-2 p-2 border border-gray-300 rounded-lg">
+                  <p className="text-lg font-medium">Name: {product.name}</p>
+                  <p className="text-sm">Quantity: {product.quantity}</p>
+                  <p className="text-sm">Total: {product.total}</p>
+                </div>
+              ))}
+              <p className="text-lg font-bold">Total Sum: {totalSum}</p> {/* Display the total sum */}
+            </div>
+          ) : (
+            <p className="mt-2 text-lg">No order details available.</p>
+          )}
+          
+        </div>
+      
+    </div>
+  )
+};
 };
 
 export default OrderDetails;

@@ -44,19 +44,11 @@ const RegisterUserForm = () => {
       const response = await axios.post(
         'http://localhost:8080/register',
         formData,
-        // {
-        //   withCredentials: false,
-        //   headers: {
-        //     'X-CSRF-Token': getCsrfToken()
-        //   },
-        // }
+      
       );
       console.log('User added:', response.data);
-      //console.log(`${config.apiUrl}/user/add/${storedUserId}`);
       alert('user registerred');
-      //localStorage.setItem('userId', null);
-      // localStorage.clear();
-      // window.location.href = '/';
+       window.location.href = '/login';
     } catch (error) {
       console.error('Error creating user:', error);
     }
