@@ -33,33 +33,6 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     public OrderRepo orderRepo;
 
-//    @Override
-//    public void saveOrder(OrdersDto ordersDto) {
-//        User user = userServiceImpl.getUserById(ordersDto.getUserId());
-//        if (user == null) {
-//            throw new RuntimeException("User not found");  // Or handle this case as needed
-//        }
-//
-//        Orders order = new Orders(ordersDto, user);
-//        Orders savedOrder = orderRepo.save(order);
-//        ordersDto.getOrderProductsDto().setOrderId(savedOrder.getId());
-//        Product product = productServiceImpl.getProductById(ordersDto.getId());
-//        OrderProduct op = orderProductService.create(ordersDto.getOrderProductsDto(), product, savedOrder);
-//        savedOrder.getOrderProducts().add(op);
-//        orderRepo.save(savedOrder);
-////        for (OrdersDto.ProductDto2 productDto : ordersDto.getProducts()) {
-////
-////            Product p = productServiceImpl.getProductById(productDto.getProductId());
-////
-////            OrderProductDto opd = new OrderProductDto(savedOrder.getId(), productDto.getProductId(), productDto.getQuantity(), productDto.getTotal(), productDto.getPrice(), productDto.getName());
-////            opd.setOrderId(savedOrder.getId());
-////            OrderProduct op = new OrderProduct(opd);
-////            orderProductService.create(opd);
-////        }
-//
-//    }
-
-
     @Override
     public void saveOrder(OrdersDto ordersDto) {
         // Check for a valid user
@@ -67,7 +40,7 @@ public class OrderServiceImpl implements OrderService {
         if (user == null) {
             throw new RuntimeException("User not found");  // Or handle this case as needed
         }
-
+        System.out.println("order dto: "+ ordersDto);
         Orders order = new Orders(ordersDto, user);
         Orders savedOrder = orderRepo.save(order);
 
@@ -105,20 +78,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Orders updateOrder(String userInfo, OrdersDto updatedOrderDto) {
-
-//        Orders existingOrder = orderRepo.findByUserInfo(userInfo);
-//
-//        if (existingOrder != null) {
-//            // Update the necessary fields
-//            existingOrder.getProducts().addAll(updatedOrderDto.getProducts());
-//            // existingOrder.setUser(updatedOrderDto.getUser());//pas très sur que ca va marcher
-//
-//
-//            return orderRepo.save(existingOrder);
-//        }
-//        else {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found for userInfo: " + userInfo);
-//        }
         return null;
     }
 

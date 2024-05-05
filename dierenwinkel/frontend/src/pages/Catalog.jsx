@@ -51,84 +51,88 @@ const Catalog = () => {
         setProducts(updatedProducts);
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-            const formData = new FormData(e.target);
-        let product = products[products.length - 1];
-        product.quantity = formData.get('quantity');
-        const productsArray = [productData]; // Ensure this is an array of product objects
-        try {
-            const sessionId = Cookies.get('session_id');
-            let orderId = null;
-            if (!sessionId) {
-                alert("Please login to continue.");
-                return;
-            }
 
-            // Simulate checking for an existing order
-            const response = await axios.get(`http://localhost:8080/orders/exist`, {
+
+    const handleSubmit = async (e, product) => {
+        e.preventDefault();
+
+        let form = e.target.closest('form');
+        if (!form) {
+            console.error('Form not found!');
+            return;
+        }
+        const formData = new FormData(form);
+        const quantity = formData.get('quantity');
+
+        const productData = {
+            ...product,
+            quantity: quantity,
+        };
+
+        const sessionId = Cookies.get('session_id');
+        if (!sessionId) {
+            alert("Please login to continue.");
+            return;
+        }
+
+        try {
+            // First, try to check for an existing order
+            const existResponse = await axios.get(`http://localhost:8080/orders/exist`, {
                 params: { sessionId: sessionId },
-                headers: {
-                    "Content-Type": "application/json;charset=UTF-8"
-                },
+                headers: { "Content-Type": "application/json;charset=UTF-8" },
                 withCredentials: true
             });
-            orderId = response.data.orderId;
-            console.log('The order id is:', orderId);
 
-            if (response.status === 200) {
-                // Assuming Cookies.get('session_id') retrieves the current session ID stored in cookies
-                response
-                const sessionId = Cookies.get('session_id');
-                console.log(sessionId);
-                console.log(product);
-                const patchResponse = await axios.patch(`http://localhost:8080/orders/update`, {
-                   
-                        orderId: orderId,
-                        productId: product.id,
-                        price: product.price,
-                        quantity: product.quantity,
-                        name: product.name,
-                        total: product.quantity * product.price
-
-            
+            // Assuming the order exists and can be updated
+            if (existResponse.status === 200 && existResponse.data.orderId) {
+                const updateResponse = await axios.patch(`http://localhost:8080/orders/update`, {
+                    orderId: existResponse.data.orderId,
+                    productId: productData.id,
+                    price: productData.price,
+                    quantity: productData.quantity,
+                    name: productData.name,
+                    total: productData.quantity * productData.price
                 }, {
                     params: { userInfo: sessionId },
-                    withCredentials: true // Ensure cookies are sent with the request for sessions
-                });
-                console.log('Patch successful:', patchResponse.data);
-
-            }
-        } catch (error) {
-            const sessionId = Cookies.get('session_id');
-            console.log(Cookies.get('session_id'));
-
-            if (error.response && error.response.status === 404) {
-                const currentDate = new Date();
-                const formattedDate = currentDate.toISOString().split('T')[0];
-                let product = products[products.length - 1];
-                const anotherResponse = await axios.post(`http://localhost:8080/orders/create`, {
-                    headers: { "Content-Type": "application/json" },
-                    userId: Cookies.get('userId'), // Ensure 'userId' is correctly defined or fetched
-                    OrderProductsDto:{
-                        orderdId: null,
-                        productId: product.id,
-                        price: product.price,
-                        quantity: product.quantity,
-                        name: product.name,
-                        total: product.quantity * product.price
-                    },
-                    content: "",
-                    date: formattedDate,
-                    userInfo: sessionId,
                     withCredentials: true
                 });
-                console.log('Handled 404, new data:', anotherResponse.data);
+
+                console.log('Order updated:', updateResponse.data);
+                return;
+            }
+        } catch (error) {
+            // If no existing order or update fails
+            if (error.response && error.response.status === 404) {
+                try {
+                    const createResponse = await axios.post(`http://localhost:8080/orders/create`, {
+                        userId: Cookies.get('userId'),
+                        orderProductsDto: {
+                            productId: productData.id,
+                            price: productData.price,
+                            quantity: productData.quantity,
+                            name: productData.name,
+                            total: productData.quantity * productData.price,
+                        },
+                        content: "",
+                        date: new Date().toISOString().split('T')[0],
+                        userInfo: sessionId,
+                    }, {
+                        headers: { "Content-Type": "application/json" },
+                        withCredentials: true,
+                    });
+
+                    console.log('Order created:', createResponse.data);
+                } catch (createError) {
+                    console.error('Error creating order:', createError);
+                    alert("Failed to add product to order.");
+                }
             } else {
-                console.error('Error in request:', error);
+                console.error('Error updating order:', error);
+                alert("Failed to update the order.");
             }
         }
     };
+
 
     return (
         <>
@@ -153,15 +157,15 @@ const Catalog = () => {
                 <h1>MENU</h1>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {Array.isArray(products) && products.map((product) => (
-                        <form key={product.id} onSubmit={(e) => handleSubmit(e)}>
+                        <form key={product.id} onSubmit={(e) => handleSubmit(e, product)}>
                             <div className="bg-white p-4 shadow-md">
-                               
-                                    <h2 className="text-lg font-semibold mb-2">{product.name}</h2>
-                                    <img src={`/${product.name}.jpg`} alt={product.name} className="w-full h-40 object-cover mb-2" />
-                                    <p className="text-gray-600 mb-2">{product.price}</p>
-                                    <p className="text-gray-600 mb-2">{product.categories}</p>
-                                    <p className="text-sm text-gray-500 mb-2">{product.description}</p>
-                                
+
+                                <h2 className="text-lg font-semibold mb-2">{product.name}</h2>
+                                <img src={`/${product.name}.jpg`} alt={product.name} className="w-full h-40 object-cover mb-2" />
+                                <p className="text-gray-600 mb-2">{product.price}</p>
+                                <p className="text-gray-600 mb-2">{product.categories}</p>
+                                <p className="text-sm text-gray-500 mb-2">{product.description}</p>
+
                                 <label className="block mb-2">
                                     Quantity:
                                     <input
@@ -172,13 +176,17 @@ const Catalog = () => {
                                         className="block w-full border border-gray-300 rounded px-2 py-1"
                                     />
                                 </label>
-                                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" onClick={() => {
+                                {/* <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" onClick={() => {
                                     if (!Cookies.get('session_id')) {
                                         alert("You must be logged in before starting your shopping journey (;")
                                     } else {
                                         setProductData(product)
                                     }
                                 }}>
+                                    Add
+                                </button> */}
+                                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                                    onClick={(e) => handleSubmit(e, product)}>
                                     Add
                                 </button>
                                 <input type="hidden" name="name" value={product.name} />
