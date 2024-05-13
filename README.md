@@ -24,5 +24,6 @@ https://github.com/chris09877/Pets-webshop
 How to start the project 
 
 1. having a mysql database called dierenwinkel4
-2. starting the server, to do so i open the folder dierenwinkel in Inteliji and then I click on run.
-3. for the frontend, you must use the CMD [npm run dev] while in the frontend folder. I usually o this in VS code
+2. At this moment no seeders yet so running content of this file in the GUI of mysql to have products:src\main\resources\db\product.sql 
+3. starting the server, to do so i open the folder dierenwinkel in Inteliji and then I click on run.
+4. for the frontend, you must use the CMD [npm run dev] while in the frontend folder. I usually o this in VS code
