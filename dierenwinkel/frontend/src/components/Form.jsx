@@ -36,7 +36,7 @@ const Form = () => {
     try {
       const response = await axios.patch(`http://localhost:8080/orders/finalize`,
         {
-          "content": formData.name,
+          "delivery_information": formData.name,
           "id": formData.phone,
           "userInfo": formData.address,
           "date": formData.order_date

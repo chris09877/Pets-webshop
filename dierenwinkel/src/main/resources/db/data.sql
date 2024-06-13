@@ -38,7 +38,7 @@ INSERT INTO product (name, description, price, quantity, categories) VALUES
 
 
 
-INSERT INTO orders (user_id, content, date, userInfo) VALUES
+INSERT INTO orders (user_id, delivery_information, date, userInfo) VALUES
                                                           (1, 'Content for Order 1', CURRENT_TIMESTAMP, 'bbl'),
                                                           (2, 'Content for Order 2', CURRENT_TIMESTAMP, 'bbl'),
                                                           (1,'Content for Order 3', CURRENT_TIMESTAMP, 'bbl');

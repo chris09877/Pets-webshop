@@ -18,7 +18,7 @@ public class OrdersDto {
 
     private OrderProductDto orderProductsDto;
 
-    private String content;
+    private String delivery_information;
     private Date date;
     private String userInfo;
 
@@ -26,11 +26,11 @@ public class OrdersDto {
     }
 
     //
-    public OrdersDto(int id, int userId, OrderProductDto opd, String content, Date date, String userInfo) {
+    public OrdersDto(int id, int userId, OrderProductDto opd, String delivery_information, Date date, String userInfo) {
         this.id = id;
         this.userId = userId;
         this.orderProductsDto = opd;
-        this.content = content;
+        this.delivery_information = delivery_information;
         this.date = date;
         this.userInfo = userInfo;
     }
@@ -42,7 +42,7 @@ public class OrdersDto {
         //this.products = o.getProducts();
         this.orderProducts = new HashSet<>(); // Initialize the set
         // Assuming you have a DTO conversion for OrderProduct
-        this.orderProducts.add(op); //        this.content = o.getContent();
+        this.orderProducts.add(op); //        this.delivery_information = o.getDelivery_information();
         this.date = o.getDate();
         this.userInfo = o.getUserInfo();
     }
@@ -72,12 +72,12 @@ public class OrdersDto {
         this.orderProducts = orderProducts;
     }
 
-    public String getContent() {
-        return content;
+    public String getDelivery_information() {
+        return delivery_information;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setDelivery_information(String delivery_information) {
+        this.delivery_information = delivery_information;
     }
 
     public Date getDate() {

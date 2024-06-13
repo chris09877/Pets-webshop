@@ -13,7 +13,7 @@ public class Order {
     private int id;
     @Column(nullable = true)
     @ElementCollection
-    private List<String> content;
+    private List<String> delivery_information;
     @Column(nullable = false, length = 100)
     private Date date;
 
@@ -29,12 +29,12 @@ public class Order {
         this.id = id;
     }
 
-    public List<String> getContent() {
-        return content;
+    public List<String> getDelivery_information() {
+        return delivery_information;
     }
 
-    public void setContent(List<String> content) {
-        this.content = content;
+    public void setDelivery_information(List<String> delivery_information) {
+        this.delivery_information = delivery_information;
     }
 
     public Date getDate() {

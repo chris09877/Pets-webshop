@@ -285,7 +285,7 @@ public class OrderController {
         if (updateOrder == null) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No order found with this session id in the user info field:" + request.getSession().getId());
         }
-        updateOrder.setContent("Name: " + orderDto.getContent() + "\nPhone:" + orderDto.getId() + "\nAddress:" + orderDto.getUserInfo());
+        updateOrder.setDelivery_information("Name: " + orderDto.getDelivery_information() + "\nPhone:" + orderDto.getId() + "\nAddress:" + orderDto.getUserInfo());
         updateOrder.setDate(orderDto.getDate());
         orderRepo.save(updateOrder);
         return ResponseEntity.ok().body("ORDER FINALIZED");
