@@ -27,3 +27,8 @@ How to start the project
 2. At this moment no seeders yet so running content of this file in the GUI of mysql to have products:src\main\resources\db\product.sql 
 3. starting the server, to do so i open the folder dierenwinkel in Inteliji and then I click on run.
 4. for the frontend, you must use the CMD [npm run dev] while in the frontend folder. I usually o this in VS code
+
+
+How to login into the app
+email: john@example.com or jane@example.com
+password: ehb123
