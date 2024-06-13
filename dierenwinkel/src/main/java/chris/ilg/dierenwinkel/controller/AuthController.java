@@ -67,20 +67,17 @@ public class AuthController {
     private LogoutSuccessHandler logoutSuccessHandler;
 
     @PostMapping("/logout")
-    public String handleCustomLogoutLogic(HttpServletRequest request, HttpServletResponse response) {
-        // Custom logic here
-        logger.info("inside logout controller");
-        HttpSession session = request.getSession(false); // Get session without creating one
-        if (session != null) {
-            logger.info("seesion id:" + session);
-
-            session.invalidate(); // Invalidate the session
-            session.removeAttribute(session.getId());
-        }
-        SecurityContextHolder.clearContext(); // Clears the security context
-        response.setHeader("Set-Cookie", "JSESSIONID=; Path=/; HttpOnly; Secure; SameSite=None; Max-Age=0"); // Clear the cookie
-        return "redirect:/logout-successful";  // Redirect to a custom page after logout
+public ResponseEntity<String> handleCustomLogoutLogic(HttpServletRequest request, HttpServletResponse response) {
+    logger.info("inside logout controller");
+    HttpSession session = request.getSession(false); // Get session without creating one
+    if (session != null) {
+        logger.info("session id: " + session);
+        session.invalidate(); // Invalidate the session
     }
+    SecurityContextHolder.clearContext(); // Clears the security context
+    response.setHeader("Set-Cookie", "JSESSIONID=; Path=/; HttpOnly; Secure; SameSite=None; Max-Age=0"); // Clear the cookie
+    return new ResponseEntity<>("logout-successful", HttpStatus.OK);  // Return 200 OK status
+}
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response) {

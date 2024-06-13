@@ -160,6 +160,7 @@ public class SecurityConfig {
                 String valueSession = request.getSession().getId();
                 if (session != null) {
                     session.invalidate();
+                    session.removeAttribute(session.getId());
                 }
 
                 logger.info("Session invalidated successfully on logout. Value of session id: " + valueSession);

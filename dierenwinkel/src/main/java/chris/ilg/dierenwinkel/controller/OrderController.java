@@ -301,7 +301,7 @@ public class OrderController {
             return ResponseEntity.notFound().build();
         }
 
-        String currentUserInfo = request.getSession().getId();  // Example: how you might get user info from session
+        String currentUserInfo = request.getSession().getId();
 
         // Filter orders that match the session user info
         List<Orders> filteredOrders = orderList.stream()

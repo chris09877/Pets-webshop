@@ -7,9 +7,9 @@ DELETE from product;
 
 
 INSERT INTO user (firstname, lastname, address, postcode, number, birthdate, phone, mail,password) VALUES
-    ('John', 'Doe', '123 Main St', '12345', '123456789', '1990-01-01', '1234567890', 'john@example.com', 'ehb123'),
+    ('John', 'Doe', '123 Main St', '12345', '123456789', '1990-01-01', '1234567890', 'john@example.com', '$2a$10$z38hVC0aW9BCAAHz3CfTAuqNdB1QV4OYnq1jvyEJnatDB.QPPVmF2'),
 
-    ('Jane', 'Doe', '456 Elm St', '54321', '987654321', '1995-01-01', '0987654321', 'jane@example.com', 'ehb123');
+    ('Jane', 'Doe', '456 Elm St', '54321', '987654321', '1995-01-01', '0987654321', 'jane@example.com', '$2a$10$z38hVC0aW9BCAAHz3CfTAuqNdB1QV4OYnq1jvyEJnatDB.QPPVmF2');
 
 
 

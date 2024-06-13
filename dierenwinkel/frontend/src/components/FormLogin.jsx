@@ -25,8 +25,8 @@ const FormLogin = () => {
 
       let header_session = headers.get('session-id');
       let header_user = headers.get('User-ID');
-      Cookies.set('session_id', header_session, { expires: 4 / 24 }); // Expires in 4 hours
-      Cookies.set('userId', header_user, { expires: 4 / 24 }); // Expires in 4 hours
+      Cookies.set('session_id', header_session, { expires: 4 / 24, path: '/' }); // Expires in 4 hours
+      Cookies.set('userId', header_user, { expires: 4 / 24, path: '/' }); // Expires in 4 hours
       window.location.href = '/catalog';
     }
 

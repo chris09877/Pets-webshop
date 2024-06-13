@@ -8,13 +8,18 @@ const LogoutBtn = () => {
     try {
       const response = await axios.post('http://localhost:8080/signout');
       console.log('Logout successful:', response.data);
+  
+      // Delete the cookies before redirecting
+      Cookies.remove("session_id", { path: '/' });
+      Cookies.remove("userId", { path: '/' });
+  
+      // Verify that cookies are removed
+      console.log("Session ID after delete: " + Cookies.get('session_id'));
+      console.log("User ID after delete: " + Cookies.get('userId'));
+  
+      // Redirect to the homepage
       window.location.href = '/';
-      console.log("seession id" + Cookies.get('session_id'));
-      Cookies.remove("session_id");
-      Cookies.remove("userId");
-      console.log("seession id after delete" + Cookies.get('session_id'));
-
-    } catch (error) {
+  }catch (error) {
       console.error('Logout failed:', error);
       alert('Logout failed. Please try again.'); // Display an alert on failure
     }
