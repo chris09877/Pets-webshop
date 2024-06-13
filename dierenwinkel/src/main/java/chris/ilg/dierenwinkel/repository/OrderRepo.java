@@ -15,8 +15,6 @@ public interface OrderRepo extends JpaRepository<Orders, Integer> {
         Orders findByUserId(Integer userId);
         List <Orders> findAllByUserId(Integer id);
         List<Orders> findAllById(Iterable<Integer> ids);
-
-        //Orders findByUserInfo(String sessionId);
         Orders findByUserInfo(String sessionId);
 
 }

@@ -126,7 +126,6 @@ public ResponseEntity<String> handleCustomLogoutLogic(HttpServletRequest request
     }
 
 
-    // SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
 
     @PostMapping("/signout")
     public ResponseEntity<String> performLogout(Authentication authentication, HttpServletRequest request, HttpServletResponse response) {

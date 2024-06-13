@@ -25,7 +25,7 @@ public class OrdersDto {
     public OrdersDto() {
     }
 
-    //
+
     public OrdersDto(int id, int userId, OrderProductDto opd, String delivery_information, Date date, String userInfo) {
         this.id = id;
         this.userId = userId;
@@ -39,14 +39,11 @@ public class OrdersDto {
     public OrdersDto(Orders o, OrderProduct op) {
         this.id = o.getId();
         this.userId = o.getUser().getId();
-        //this.products = o.getProducts();
-        this.orderProducts = new HashSet<>(); // Initialize the set
-        // Assuming you have a DTO conversion for OrderProduct
-        this.orderProducts.add(op); //        this.delivery_information = o.getDelivery_information();
+        this.orderProducts = new HashSet<>();
+        this.orderProducts.add(op);
         this.date = o.getDate();
         this.userInfo = o.getUserInfo();
     }
-    // Getters and setters
 
     public int getId() {
         return id;

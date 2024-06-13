@@ -16,23 +16,13 @@ public class OrderProductServiceImpl implements OrderProductService {
 
     @Autowired
     private OrderProductRepo orderProductRepo;
-    //    @Autowired
-//    private OrderServiceImpl orderServiceImpl;
+
     @Autowired
     private ProductServiceImpl productServiceImpl;
 
 
     @Override
     public OrderProduct create(OrderProductDto opd, Product p, Orders o) {
-
-//       Orders o =  orderServiceImpl.getOrderById(opd.getOrderId());
-//       if (o == null){
-//           System.out.println("No order found with matching id:" + opd.getOrderId());
-//       }
-//        Product p = productServiceImpl.getProductById(opd.getProductId());
-//        if (p == null){
-//            System.out.println("No product found with matching id:" + opd.getProductId());
-//        }
         OrderProduct op = new OrderProduct(opd,p,o);
         return orderProductRepo.save(op);
     }

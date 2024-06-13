@@ -33,13 +33,7 @@ public class Orders {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    //    @ManyToMany
-//    @JoinTable(
-//            name = "order_product",
-//            joinColumns = @JoinColumn(name = "order_id"),
-//            inverseJoinColumns = @JoinColumn(name = "product_id"))
-//   //@JsonManagedReference
-//    private Set<Product> products = new HashSet<>();
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrderProduct> orderProducts = new HashSet<>();
     @Column(nullable = true)

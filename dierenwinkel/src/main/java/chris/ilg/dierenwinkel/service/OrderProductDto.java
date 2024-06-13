@@ -8,7 +8,7 @@ public class OrderProductDto {
     private double total;
     private String name;
 
-    // Constructors
+
     public OrderProductDto() {
     }
 
