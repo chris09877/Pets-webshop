@@ -10,7 +10,7 @@ const Catalog = () => {
     const [products, setProducts] = useState([]);
     const [showBtn, setShowBtn] = useState(true);
     const [productData, setProductData] = useState({});
-    const allProducts = [];
+    let allProducts = [];
     useEffect(() => {
 
         async function fetchProducts() {
