@@ -145,7 +145,6 @@ public class SecurityConfig {
 
                 // You can optionally add a redirect or additional logic here
                 response.setStatus(HttpServletResponse.SC_OK);
-                // response.sendRedirect("/home"); // Modify as necessary if you want a redirect after login
             }
         };
     }

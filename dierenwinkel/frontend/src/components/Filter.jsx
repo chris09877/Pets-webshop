@@ -39,9 +39,7 @@ const Filter = (props) => {
 
   };
 
-  // useEffect(() => {
-  //   fetchProducts('all');
-  // }, []);
+ 
 
   return (
     <div>
