@@ -4,14 +4,6 @@ import NavBar from "../components/NavBar";
 import Cookies from 'js-cookie';
 
 const Home = () => {
-  useEffect(() => {
-    // Create a cookie named 'jsessionid' with value 'example' that lasts for 4 hours
-    // Cookies.set('session_id', '', { expires:1 }); 
-    // Cookies.set('csrf-token', '', { expires: 1 }); 
-    // Cookies.set('userId', '', { expires: 1 }); 
-
-
-}, []);
 
   const [isHowItWorksExpanded, setIsHowItWorksExpanded] = useState(true);
   const [isJoinCommunityExpanded, setIsJoinCommunityExpanded] = useState(false);
